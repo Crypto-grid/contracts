@@ -1,5 +1,6 @@
 # Crypto-Grid
 This will be a hyper realistic Play to Earn (P2E) crypto currency mining simulator.  The game will leverage its own token $GRID and users will own nfts relating to land and equipment.
+Miners will have to weigh up where to build their mining operation based on real world issues such as locally available energy sources and prices, government restrictions on crypto mining and geopolitical events such as war.
 
 # $Grid Proposed Tokenomics (TBC)
 Total Supply: 150,000,000
@@ -8,10 +9,25 @@ Private Funding: 10% of total supply
 The rest of the tokens are proposed to incentivize players e.g. mining rewards.
 4% of any nft sale will return to the game treasury.
 
+**# Proposed Stack**
 
+# Proposed Game Renderer
+At the moment three js (WebGL) is proposed, however open for discussion.  Ian has previous experience building 3d scenes in three js.
 
+# Proposed Data Storage
+Data that will not change: IPFS
+Data that will/could change: 
+Option 1 - IPFS to point to new data
+Option 2 - modify JSON file as API response
+Metadata relating to nfts etc proposed to be stored on chain
 
-
+# Uses of Chainlink
+Crypto prices relating to rewards in dollar value etc
+Perhaps use the randomizer for when user would receive mining rewards between all competing nodes
+Future uses: 
+(i)weather data for energy yields from natural sources, 
+(ii)geopolitical restictions on mining operations,
+(iii)energy prices in different part of the world
 
 # Advanced Sample Hardhat Project
 
