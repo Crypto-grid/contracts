@@ -11,17 +11,17 @@ The rest of the tokens are proposed to incentivize players e.g. mining rewards.
 
 # Proposed Stack
 
-**# Proposed Game Renderer**
+# Proposed Game Renderer
 At the moment three js (WebGL) is proposed, however open for discussion.  Ian has previous experience building 3d scenes in three js.
-**
-# Proposed Data Storage**
+
+# Proposed Data Storage
 Data that will not change: IPFS
 Data that will/could change: 
 Option 1 - IPFS to point to new data
 Option 2 - modify JSON file as API response
 Metadata relating to nfts etc proposed to be stored on chain
 
-**# Uses of Chainlink**
+# Uses of Chainlink
 Crypto prices relating to rewards in dollar value etc
 Perhaps use the randomizer for when user would receive mining rewards between all competing nodes
 Future uses: 
