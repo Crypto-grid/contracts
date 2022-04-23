@@ -1,3 +1,18 @@
+# Crypto-Grid
+This will be a hyper realistic Play to Earn (P2E) crypto currency mining simulator.  The game will leverage its own token $GRID and users will own nfts relating to land and equipment.
+
+# $Grid Proposed Tokenomics (TBC)
+Total Supply: 150,000,000
+Development fund/Game Treasury: 15% of total supply
+Private Funding: 10% of total supply
+The rest of the tokens are proposed to incentivize players e.g. mining rewards.
+4% of any nft sale will return to the game treasury.
+
+
+
+
+
+
 # Advanced Sample Hardhat Project
 
 This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
