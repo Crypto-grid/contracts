@@ -1,35 +1,47 @@
 # Crypto-Grid
-This will be a hyper realistic Play to Earn (P2E) crypto currency mining simulator.  The game will leverage its own token $GRID and users will own nfts relating to land and equipment.
+
+This will be a hyper realistic Play to Earn (P2E) crypto currency mining simulator.  The game will leverage its own token $GRID and users will own NFTs relating to land and equipment.
 Miners will have to weigh up where to build their mining operation based on real world issues such as locally available energy sources and prices, government restrictions on crypto mining and geopolitical events such as war.
 
-# $Grid Proposed Tokenomics (TBC)
-Total Supply: 150,000,000
-Development fund/Game Treasury: 15% of total supply
-Private Funding: 10% of total supply
-The rest of the tokens are proposed to incentivize players e.g. mining rewards.
-4% of any nft sale will return to the game treasury.
+## $Grid Proposed Tokenomics (TBC)
 
-# Proposed Stack
+**Total Supply**: 150,000,000
+**Development fund/Game Treasury**: 15% of total supply
+**Private Funding**: 10% of total supply
 
-# Proposed Game Renderer
-At the moment three js (WebGL) is proposed, however open for discussion.  Ian has previous experience building 3d scenes in three js.
+The rest of the tokens are proposed to incentivize players (e.g. mining rewards).
+4% of any NFT sale will return to the game treasury.
 
-# Proposed Data Storage
-Data that will not change: IPFS
-Data that will/could change: 
-Option 1 - IPFS to point to new data
-Option 2 - modify JSON file as API response
-Metadata relating to nfts etc proposed to be stored on chain
+## Proposed Stack
 
-# Uses of Chainlink
-Crypto prices relating to rewards in dollar value etc
-Perhaps use the randomizer for when user would receive mining rewards between all competing nodes
-Future uses: 
-(i)weather data for energy yields from natural sources, 
-(ii)geopolitical restictions on mining operations,
-(iii)energy prices in different part of the world
+## Proposed Game Renderer
 
-# Advanced Sample Hardhat Project
+At the moment three js (WebGL) is proposed, however open for discussion. Ian has previous experience building 3d scenes in three js.
+
+## Proposed Data Storage
+
+**Data that will not change**: IPFS
+**Data that will/could change**: Backend API syncing up game JSON data
+
+- Option 1: IPFS to point to new data (e.g. <https://ipfs.io/>)
+- Option 2: Modify JSON through REST call API ([Chainlink API Calls](https://docs.chain.link/docs/advanced-tutorial/))
+
+Metadata relating to NFTs is proposed to be stored on chain.
+
+## Uses of Chainlink
+
+- [Crypto prices](https://docs.chain.link/docs/consuming-data-feeds/) relating to rewards in dollar value
+- Perhaps use [random numbers](https://docs.chain.link/docs/get-a-random-number/) for when user would receive mining rewards between all competing nodes
+
+Future uses:
+
+1. Weather data for energy yields from natural sources
+2. Geopolitical restrictions on mining operations
+3. Energy prices in different part of the world
+
+## Hardhat
+
+### Advanced Sample Hardhat Project
 
 This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
 
@@ -56,7 +68,7 @@ npx solhint 'contracts/**/*.sol'
 npx solhint 'contracts/**/*.sol' --fix
 ```
 
-# Etherscan verification
+### Etherscan verification
 
 To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
 
@@ -72,6 +84,6 @@ Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_
 npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
 ```
 
-# Performance optimizations
+### Performance optimizations
 
 For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
