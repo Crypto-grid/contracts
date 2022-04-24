@@ -3,14 +3,51 @@
 This will be a hyper realistic Play to Earn (P2E) crypto currency mining simulator.  The game will leverage its own token $GRID and users will own NFTs relating to land and equipment.
 Miners will have to weigh up where to build their mining operation based on real world issues such as locally available energy sources and prices, government restrictions on crypto mining and geopolitical events such as war.
 
-## $Grid Proposed Tokenomics (TBC)
+## $Grid Tokenomics
 
-**Total Supply**: 150,000,000
-**Development fund/Game Treasury**: 15% of total supply
-**Private Funding**: 10% of total supply
+The $GRID token is the engine underneath CryptoGrid's hood. It will facilitate player-based micro-transactions such as "selling" one's GPUs/CPUs/ASICs/lands on the marketplace. But, it will also be a digital real estate tool, useful for the buying and renting of land. In this case, the tokens will be burned in the interest of sustainability.
+
+**Total Supply**: 750,000,000 (Hard Cap)
+
+**Only Possible Addition**: Ultra rare (1x10^-6%) chance of claiming rewards related to mining and selling silicon lottery equipment to the game.
+
+**Pre-Mint**
+Of the 750 million $GRID, only 25 million (3.33%) will be minted upon initial deployment.
+
+Of that 25 million...
+
+**25% (6.25 Million)** Towards the developers' multi-signature wallet to fund the development of the game.
+
+**30% (7.5 Million)** Will fund the initial liquidity pool on a DEX (ex. Sushiswap).
+
+**10% (2.5 Million)** Towards Marketing (Over 5 Years).
+
+**10% (2.5 Million)** To Hire other staff, contractors and freelancers.
+
+**25% (6.5 Million)** Player incentives to stake their tokens into our DEX farm to promote price stability.
+
+**Additional Info**
+Name: CryptoGrid
+Symbol: GRID
+Decimals: 18
 
 The rest of the tokens are proposed to incentivize players (e.g. mining rewards).
 4% of any NFT sale will return to the game treasury.
+
+## $UPGRADES TOKENOMICS
+
+$UPGRADES is a token where mined tokens like gridXMR, gridETH, gridBTC can be traded in the game to the token. There will not be any supply cap for this token.
+
+$UPGRADES can be used for upgrades in the game for example minting new NFT equipment (CPU,GPU and ASIC) where rarity of the item will be determined through chainlink VRFs.
+
+$UPGRADES will also be used to rebirth and progress in the game which will reset all their items and all gridX tokens.
+
+**Additional Info**
+Name: Upgrades
+Symbol: UPG
+Decimals: 18
+Max Supply: Infinite
+
 
 ## Proposed Stack
 
