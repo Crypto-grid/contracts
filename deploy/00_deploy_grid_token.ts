@@ -1,3 +1,5 @@
+import { randomBytes } from 'crypto';
+import { getUnnamedAccounts } from 'hardhat';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
@@ -5,10 +7,11 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { getNamedAccounts, deployments } = hre;
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
-  await deploy('YourContract', {
+  const randomAccounts = await getUnnamedAccounts()
+  await deploy('Grid', {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
     from: deployer,
-    // args: ["Hello"],
+    args: [20000000, randomAccounts[0], randomAccounts[1], randomAccounts[2]],
     log: true,
   });
 
@@ -21,7 +24,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   */
 };
 export default func;
-func.tags = ['YourContract'];
+func.tags = ['Grid'];
 
 /*
 Tenderly verification
