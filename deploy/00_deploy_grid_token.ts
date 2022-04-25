@@ -1,4 +1,3 @@
-import { randomBytes } from 'crypto';
 import { getUnnamedAccounts } from 'hardhat';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
