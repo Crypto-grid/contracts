@@ -15,33 +15,25 @@ contract Grid is ERC20Capped, Ownable {
     address public marketing;
     address public treasury;
     address public liquidityPool;
-    mapping(address => uint256) public balance;
 
     /// @notice GRID contract startup
     /// @dev Name: CryptoGrid,  Symbol: GRID, Decimals: 18 
     constructor(address _marketing, address _treasury, address _liquidityPool) ERC20("CryptoGrid", "GRID") ERC20Capped(MAXIMUM_SUPPLY) onlyOwner {
         // set initial supply creator/owner
-        balance[msg.sender] = INITIAL_SUPPLY;
         _mint(msg.sender, INITIAL_SUPPLY);
 
         // allocate to given parties on contract creation
 
         // 10% to marketing
         marketing = _marketing;
-        balance[msg.sender] = balance[msg.sender] - INITIAL_SUPPLY/10;
-        balance[_marketing] = INITIAL_SUPPLY/10;
-        emit Transfer(msg.sender, _marketing, INITIAL_SUPPLY/10);
+        _transfer(msg.sender, _marketing, INITIAL_SUPPLY/10);
 
         // 10% to treasury
         treasury = _treasury;
-        balance[msg.sender] = balance[msg.sender] - INITIAL_SUPPLY/10;
-        balance[_treasury] = INITIAL_SUPPLY/10;
-        emit Transfer(msg.sender, _treasury, INITIAL_SUPPLY/10);
+        _transfer(msg.sender, _treasury, INITIAL_SUPPLY/10);
 
         // 30% to liquidity pool
         liquidityPool = _liquidityPool;
-        balance[msg.sender] = balance[msg.sender] - INITIAL_SUPPLY*3/10;
-        balance[_liquidityPool] = INITIAL_SUPPLY*3/10;
-        emit Transfer(msg.sender, _liquidityPool, INITIAL_SUPPLY*3/10);
+        _transfer(msg.sender, _liquidityPool, INITIAL_SUPPLY*3/10);
     }
 }
