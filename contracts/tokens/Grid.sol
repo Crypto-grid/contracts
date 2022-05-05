@@ -9,8 +9,8 @@ import "./Treasury.sol";
 /// @notice GRID will facilitate player based transactions like selling their GPUs/CPUs./ASICs and land on the marketplace. It'll also be used to buy/rent land from the game where the tokens will be burned to ensure it will be sustainable.
 /// @dev 750 million hard cap for the GRID token / 25 million tokens minted on contract deployment
 contract Grid is ERC20Capped, Ownable {
-  uint256 private immutable MAXIMUM_SUPPLY = 750000000;
-  uint256 private immutable INITIAL_SUPPLY = 25000000;
+  uint256 private constant c_maximum_supply = 750000000;
+  uint256 private constant c_initial_supply = 25000000;
 
   // token holders / spenders
   address public marketing; // initial 10% allocation to marketing to gather new players to the game (5 year based schedule)
@@ -31,25 +31,25 @@ contract Grid is ERC20Capped, Ownable {
     address _liquidityPool,
     address _devSpender,
     address _incentivesSpender
-  ) ERC20("CryptoGrid", "GRID") ERC20Capped(MAXIMUM_SUPPLY) onlyOwner {
+  ) ERC20("CryptoGrid", "GRID") ERC20Capped(c_maximum_supply**10*18) onlyOwner {
     // set initial supply creator/owner
-    _mint(msg.sender, INITIAL_SUPPLY ** 10 * decimals());
+    ERC20._mint(msg.sender, c_initial_supply**10*18);
 
     // allocate or delegate tokens to given parties on contract creation
     marketing = _marketing;
-    transfer(_marketing, INITIAL_SUPPLY ** 10 * decimals() / 10);
+    transfer(_marketing, c_initial_supply**10*18/10);
 
     // new to provide approval instead of account transfer
-    treasury.initialDepositToken(_treasury, (INITIAL_SUPPLY ** 10 * decimals() / 10));
+    treasury.initialDepositToken(_treasury, (c_initial_supply**10*18/10));
 
     liquidityPool = _liquidityPool;
-    transfer(_liquidityPool, INITIAL_SUPPLY ** 10 * decimals() * 3 / 10);
+    transfer(_liquidityPool, c_initial_supply**10*18/10);
 
     developmentSpender = _devSpender;
-    approve(_devSpender, INITIAL_SUPPLY ** 10 * decimals() / 4);
+    approve(_devSpender, c_initial_supply**10*18/4);
 
     incentivesSpender = _incentivesSpender;
-    approve(_incentivesSpender, INITIAL_SUPPLY ** 10 * decimals() / 4);
+    approve(_incentivesSpender, c_initial_supply**10*18/4);
   }
 
 }
