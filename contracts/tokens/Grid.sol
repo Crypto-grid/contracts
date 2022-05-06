@@ -8,9 +8,9 @@ import "./Treasury.sol";
 /// @title GRID is the main token/currency contract for CryptoGrid game.
 /// @notice GRID will facilitate player based transactions like selling their GPUs/CPUs./ASICs and land on the marketplace. It'll also be used to buy/rent land from the game where the tokens will be burned to ensure it will be sustainable.
 /// @dev 750 million hard cap for the GRID token / 25 million tokens minted on contract deployment
-contract Grid is ERC20Capped, Ownable {
-	uint256 private constant maximum_supply_ = 750000000 * 1e18;
-	uint256 private constant initial_supply_ = 25000000 * 1e18;
+contract Grid is ERC20Capped {
+	uint256 public constant MAXIMUM_SUPPLY = 750000000 * 1e18;
+	uint256 public constant INITIAL_SUPPLY = 25000000 * 1e18;
 
 	// token holders / spenders
 	address public marketing; // initial 10% allocation to marketing to gather new players to the game (5 year based schedule)
@@ -32,14 +32,13 @@ contract Grid is ERC20Capped, Ownable {
 		//    address _devSpender,
 		//    address _incentivesSpender
 		ERC20("CryptoGrid", "GRID")
-		ERC20Capped(maximum_supply_)
-		onlyOwner
+		ERC20Capped(MAXIMUM_SUPPLY)
 	{
 		// set initial supply to creator/owner
-		_mint(msg.sender, initial_supply_);
+		ERC20._mint(msg.sender, INITIAL_SUPPLY);
 
 		// 10% is sent to treasury
-		// addTreasury(address(this), c_initial_supply/10);
+		// treasury.depositToken(address(this), INITIAL_SUPPLY/10);
 
 		// allocate or delegate tokens to given parties on contract creation
 		//    marketing = _marketing;
@@ -54,10 +53,6 @@ contract Grid is ERC20Capped, Ownable {
 		//
 		//    incentivesSpender = _incentivesSpender;
 		//    approve(_incentivesSpender, c_initial_supply*10**18/4);
-	}
-
-	function addTreasury(address _treasuryAddress, uint256 _amount) internal {
-		treasury.initialDepositToken(_treasuryAddress, _amount);
 	}
 
 	// function createLiquidityPool() {}
