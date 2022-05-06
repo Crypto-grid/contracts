@@ -24,6 +24,9 @@ jobs:
     - name: Hardhat compile
       run: yarn compile
 
+    - name: Debug
+      run: ls -la && pwd
+
     - name: Run Slither
       uses: crytic/slither-action@v0.1.1
       continue-on-error: true
