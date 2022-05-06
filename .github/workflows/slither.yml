@@ -24,8 +24,8 @@ jobs:
     - name: Hardhat compile
       run: yarn compile
 
-    - name: Debug
-      run: ls -la && pwd
+    - name: Hacky solution
+      run: cp -r generated/artifacts .
 
     - name: Run Slither
       uses: crytic/slither-action@v0.1.1
