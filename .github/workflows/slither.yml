@@ -19,7 +19,7 @@ jobs:
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
 
     - name: Install dependencies
-      run: yarn --frozen-lockfile
+      run: yarn install
 
     - name: Hardhat compile
       run: yarn compile
