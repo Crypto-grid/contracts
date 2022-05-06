@@ -2,12 +2,25 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 describe("Grid", function () {
-  it("Should deploy Grid with correct premint amount", async function () {
-    const Grid = await ethers.getContractFactory("Grid");
+
+  it("Should deploy Grid tokens with 25M minted on deployment", async function () {
+    
     const signers = await ethers.getSigners();
-    const grid = await Grid.deploy(20000000, signers[1].address, signers[2].address, signers[3].address);
+    // const treasuryAddress = signers[1].address
+
+    const gridFactory = await ethers.getContractFactory("Grid");    
+    // const grid = await gridFactory.deploy(treasuryAddress);
+    const grid = await gridFactory.deploy();
     await grid.deployed();
 
-    expect(await grid.totalSupply()).to.equal(20000000);
+    // check if initial supply is accurate initial supply
+    const initialSupply = await grid.totalSupply();
+    // console.log('Should mint (25M*10**18) 2.5e+25 Grid tokens ==>', Number(totalSupply));
+    expect(initialSupply).to.be.not.undefined;
+    expect(initialSupply).to.be.not.null;
+    expect(initialSupply).to.be.not.NaN;
+    expect(Number(initialSupply)).to.equal(25000000000000000000000000);
+
   });
+
 });

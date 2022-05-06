@@ -9,8 +9,8 @@ import "./Treasury.sol";
 /// @notice GRID will facilitate player based transactions like selling their GPUs/CPUs./ASICs and land on the marketplace. It'll also be used to buy/rent land from the game where the tokens will be burned to ensure it will be sustainable.
 /// @dev 750 million hard cap for the GRID token / 25 million tokens minted on contract deployment
 contract Grid is ERC20Capped, Ownable {
-  uint256 private constant c_maximum_supply = 750000000;
-  uint256 private constant c_initial_supply = 25000000;
+  uint256 private constant c_maximum_supply = 750000000000000000000000000; // 750M*10**18
+  uint256 private constant c_initial_supply =  25000000000000000000000000; // 25M*10**18
 
   // token holders / spenders
   address public marketing; // initial 10% allocation to marketing to gather new players to the game (5 year based schedule)
@@ -26,30 +26,38 @@ contract Grid is ERC20Capped, Ownable {
   /// @notice GRID contract startup
   /// @dev Name: CryptoGrid,  Symbol: GRID, Decimals: 18
   constructor(
-    address _marketing,
-    address _treasury,
-    address _liquidityPool,
-    address _devSpender,
-    address _incentivesSpender
-  ) ERC20("CryptoGrid", "GRID") ERC20Capped(c_maximum_supply**10*18) onlyOwner {
-    // set initial supply creator/owner
-    ERC20._mint(msg.sender, c_initial_supply**10*18);
+    // address _treasuryAddress
+//    address _marketing,
+//    address _liquidityPool,
+//    address _devSpender,
+//    address _incentivesSpender
+  ) ERC20("CryptoGrid", "GRID") ERC20Capped(c_maximum_supply) onlyOwner {
+
+    // set initial supply to creator/owner
+    ERC20._mint(msg.sender, c_initial_supply);
+
+    // 10% is sent to treasury
+    // addTreasury(address(this), c_initial_supply/10);
 
     // allocate or delegate tokens to given parties on contract creation
-    marketing = _marketing;
-    transfer(_marketing, c_initial_supply**10*18/10);
-
-    // new to provide approval instead of account transfer
-    treasury.initialDepositToken(_treasury, (c_initial_supply**10*18/10));
-
-    liquidityPool = _liquidityPool;
-    transfer(_liquidityPool, c_initial_supply**10*18/10);
-
-    developmentSpender = _devSpender;
-    approve(_devSpender, c_initial_supply**10*18/4);
-
-    incentivesSpender = _incentivesSpender;
-    approve(_incentivesSpender, c_initial_supply**10*18/4);
+//    marketing = _marketing;
+//    transfer(_marketing, c_initial_supply*10**18/10);
+//
+//
+//    liquidityPool = _liquidityPool;
+//    transfer(_liquidityPool, c_initial_supply*10**18/10);
+//
+//    developmentSpender = _devSpender;
+//    approve(_devSpender, c_initial_supply*10**18/4);
+//
+//    incentivesSpender = _incentivesSpender;
+//    approve(_incentivesSpender, c_initial_supply*10**18/4);
   }
+
+  function addTreasury(address _treasuryAddress, uint256 _amount) internal {
+    treasury.initialDepositToken(_treasuryAddress, _amount);
+  }
+
+  // function createLiquidityPool() {}
 
 }
