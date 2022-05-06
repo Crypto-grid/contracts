@@ -2,7 +2,6 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "../treasury/Treasury.sol";
 
 /// @title GRID is the main token/currency contract for CryptoGrid game.

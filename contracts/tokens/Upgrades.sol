@@ -4,6 +4,10 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract Upgrades is ERC20 {
-    constructor() ERC20("Upgrades", "UPGRADES") public {}    
+contract Upgrades is ERC20{
+    constructor() ERC20("Upgrades", "UPGRADES") {
+
+	}
+
+	
 }
