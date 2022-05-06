@@ -9,55 +9,56 @@ import "./Treasury.sol";
 /// @notice GRID will facilitate player based transactions like selling their GPUs/CPUs./ASICs and land on the marketplace. It'll also be used to buy/rent land from the game where the tokens will be burned to ensure it will be sustainable.
 /// @dev 750 million hard cap for the GRID token / 25 million tokens minted on contract deployment
 contract Grid is ERC20Capped, Ownable {
-  uint256 private constant c_maximum_supply = 750000000000000000000000000; // 750M*10**18
-  uint256 private constant c_initial_supply =  25000000000000000000000000; // 25M*10**18
+	uint256 private constant maximum_supply_ = 750000000 * 1e18;
+	uint256 private constant initial_supply_ = 25000000 * 1e18;
 
-  // token holders / spenders
-  address public marketing; // initial 10% allocation to marketing to gather new players to the game (5 year based schedule)
-  
-  // initial supply 10% allocation to treasury multi-sig to fund our operation costs and hire staff
-  Treasury public treasury;
-  // address public treasury; 
+	// token holders / spenders
+	address public marketing; // initial 10% allocation to marketing to gather new players to the game (5 year based schedule)
 
-  address public liquidityPool; // initial supply 30% allocation to liquidity pool on DEX like sushiswap
-  address public developmentSpender; // initial supply 25% approval to developer multi-sig wallet to fund development of the game
-  address public incentivesSpender; // initial supply 25% approval for incentives for players to stake their tokens into sushiswap farm and ensure stability of price
+	// initial supply 10% allocation to treasury multi-sig to fund our operation costs and hire staff
+	Treasury public treasury;
+	// address public treasury;
 
-  /// @notice GRID contract startup
-  /// @dev Name: CryptoGrid,  Symbol: GRID, Decimals: 18
-  constructor(
-    // address _treasuryAddress
-//    address _marketing,
-//    address _liquidityPool,
-//    address _devSpender,
-//    address _incentivesSpender
-  ) ERC20("CryptoGrid", "GRID") ERC20Capped(c_maximum_supply) onlyOwner {
+	address public liquidityPool; // initial supply 30% allocation to liquidity pool on DEX like sushiswap
+	address public developmentSpender; // initial supply 25% approval to developer multi-sig wallet to fund development of the game
+	address public incentivesSpender; // initial supply 25% approval for incentives for players to stake their tokens into sushiswap farm and ensure stability of price
 
-    // set initial supply to creator/owner
-    ERC20._mint(msg.sender, c_initial_supply);
+	/// @notice GRID contract startup
+	/// @dev Name: CryptoGrid,  Symbol: GRID, Decimals: 18
+	constructor()
+		// address _treasuryAddress
+		//    address _marketing,
+		//    address _liquidityPool,
+		//    address _devSpender,
+		//    address _incentivesSpender
+		ERC20("CryptoGrid", "GRID")
+		ERC20Capped(maximum_supply_)
+		onlyOwner
+	{
+		// set initial supply to creator/owner
+		_mint(msg.sender, initial_supply_);
 
-    // 10% is sent to treasury
-    // addTreasury(address(this), c_initial_supply/10);
+		// 10% is sent to treasury
+		// addTreasury(address(this), c_initial_supply/10);
 
-    // allocate or delegate tokens to given parties on contract creation
-//    marketing = _marketing;
-//    transfer(_marketing, c_initial_supply*10**18/10);
-//
-//
-//    liquidityPool = _liquidityPool;
-//    transfer(_liquidityPool, c_initial_supply*10**18/10);
-//
-//    developmentSpender = _devSpender;
-//    approve(_devSpender, c_initial_supply*10**18/4);
-//
-//    incentivesSpender = _incentivesSpender;
-//    approve(_incentivesSpender, c_initial_supply*10**18/4);
-  }
+		// allocate or delegate tokens to given parties on contract creation
+		//    marketing = _marketing;
+		//    transfer(_marketing, c_initial_supply*10**18/10);
+		//
+		//
+		//    liquidityPool = _liquidityPool;
+		//    transfer(_liquidityPool, c_initial_supply*10**18/10);
+		//
+		//    developmentSpender = _devSpender;
+		//    approve(_devSpender, c_initial_supply*10**18/4);
+		//
+		//    incentivesSpender = _incentivesSpender;
+		//    approve(_incentivesSpender, c_initial_supply*10**18/4);
+	}
 
-  function addTreasury(address _treasuryAddress, uint256 _amount) internal {
-    treasury.initialDepositToken(_treasuryAddress, _amount);
-  }
+	function addTreasury(address _treasuryAddress, uint256 _amount) internal {
+		treasury.initialDepositToken(_treasuryAddress, _amount);
+	}
 
-  // function createLiquidityPool() {}
-
+	// function createLiquidityPool() {}
 }
