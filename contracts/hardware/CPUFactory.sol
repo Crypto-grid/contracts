@@ -7,18 +7,25 @@ import "./cpu/CPU.sol";
 
 contract CPUFactory is Ownable {
 	// This array is used to store all available CPUs that can be sold
-    CPU[] public availableCPUs_;
+	CPU[] public availableCPUs_;
 
 	address public aggregatorAddress_;
+	address public upgradeTokenAddress_;
 
-    constructor(address _aggregatorAddress) public {
+	constructor(address _aggregatorAddress, address _upgradeTokenAddress) {
 		aggregatorAddress_ = _aggregatorAddress;
+		upgradeTokenAddress_ = _upgradeTokenAddress;
 		createNewCPU("Intel", "i5", "4990k", 0);
-    }
+	}
 
-    // createNewCPU creates a new NFT based CPU which can be classified as a brand of CPU, series and name of the CPU
-    function createNewCPU(string memory _brand, string memory _series, string memory _name, uint256 _basePrice) public onlyOwner {
-		CPU cpu = new CPU(_brand, _series, _name, _basePrice, aggregatorAddress_);
+	// createNewCPU creates a new NFT based CPU which can be classified as a brand of CPU, series and name of the CPU
+	function createNewCPU(
+		string memory _brand,
+		string memory _series,
+		string memory _name,
+		uint256 _basePrice
+	) public onlyOwner {
+		CPU cpu = new CPU(_brand, _series, _name, _basePrice, upgradeTokenAddress_, aggregatorAddress_);
 		availableCPUs_.push(cpu);
-    }
+	}
 }
