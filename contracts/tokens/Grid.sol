@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.7;
 
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20CappedUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./Treasury.sol";
 
 /// @title GRID is the main token/currency contract for CryptoGrid game.
 /// @notice GRID will facilitate player based transactions like selling their GPUs/CPUs./ASICs and land on the marketplace. It'll also be used to buy/rent land from the game where the tokens will be burned to ensure it will be sustainable.
 /// @dev 750 million hard cap for the GRID token / 25 million tokens minted on contract deployment
-contract Grid is ERC20Capped {
+contract Grid is Initializable, ERC20CappedUpgradeable, OwnableUpgradeable{
 	uint256 public constant MAXIMUM_SUPPLY = 750000000 * 1e18;
 	uint256 public constant INITIAL_SUPPLY = 25000000 * 1e18;
 
@@ -25,35 +27,42 @@ contract Grid is ERC20Capped {
 
 	/// @notice GRID contract startup
 	/// @dev Name: CryptoGrid,  Symbol: GRID, Decimals: 18
-	constructor()
-		// address _treasuryAddress
-		//    address _marketing,
-		//    address _liquidityPool,
-		//    address _devSpender,
-		//    address _incentivesSpender
-		ERC20("CryptoGrid", "GRID")
-		ERC20Capped(MAXIMUM_SUPPLY)
-	{
-		// set initial supply to creator/owner
-		ERC20._mint(msg.sender, INITIAL_SUPPLY);
+	// constructor()
+	// 	// address _treasuryAddress
+	// 	//    address _marketing,
+	// 	//    address _liquidityPool,
+	// 	//    address _devSpender,
+	// 	//    address _incentivesSpender
+	// 	ERC20("CryptoGrid", "GRID")
+	// 	ERC20Capped(MAXIMUM_SUPPLY)
+	// {
+	// 	// set initial supply to creator/owner
+	// 	ERC20._mint(msg.sender, INITIAL_SUPPLY);
 
-		// 10% is sent to treasury
-		// treasury.depositToken(address(this), INITIAL_SUPPLY/10);
+	// 	// 10% is sent to treasury
+	// 	// treasury.depositToken(address(this), INITIAL_SUPPLY/10);
 
-		// allocate or delegate tokens to given parties on contract creation
-		//    marketing = _marketing;
-		//    transfer(_marketing, c_initial_supply*10**18/10);
-		//
-		//
-		//    liquidityPool = _liquidityPool;
-		//    transfer(_liquidityPool, c_initial_supply*10**18/10);
-		//
-		//    developmentSpender = _devSpender;
-		//    approve(_devSpender, c_initial_supply*10**18/4);
-		//
-		//    incentivesSpender = _incentivesSpender;
-		//    approve(_incentivesSpender, c_initial_supply*10**18/4);
-	}
+	// 	// allocate or delegate tokens to given parties on contract creation
+	// 	//    marketing = _marketing;
+	// 	//    transfer(_marketing, c_initial_supply*10**18/10);
+	// 	//
+	// 	//
+	// 	//    liquidityPool = _liquidityPool;
+	// 	//    transfer(_liquidityPool, c_initial_supply*10**18/10);
+	// 	//
+	// 	//    developmentSpender = _devSpender;
+	// 	//    approve(_devSpender, c_initial_supply*10**18/4);
+	// 	//
+	// 	//    incentivesSpender = _incentivesSpender;
+	// 	//    approve(_incentivesSpender, c_initial_supply*10**18/4);
+	// }
+
+    function initialize() external initializer{
+        __ERC20_init("CryptoGrid", "GRID");
+        __ERC20Capped_init_unchained(MAXIMUM_SUPPLY);
+		__Ownable_init();
+		// _mint(msg.sender, INITIAL_SUPPLY);
+    }
 
 	// function createLiquidityPool() {}
 }
