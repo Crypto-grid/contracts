@@ -61,7 +61,7 @@ contract Grid is Initializable, ERC20CappedUpgradeable, OwnableUpgradeable{
         __ERC20_init("CryptoGrid", "GRID");
         __ERC20Capped_init_unchained(MAXIMUM_SUPPLY);
 		__Ownable_init();
-		// _mint(msg.sender, INITIAL_SUPPLY);
+		_mint(msg.sender, INITIAL_SUPPLY);
     }
 
 	// function createLiquidityPool() {}
