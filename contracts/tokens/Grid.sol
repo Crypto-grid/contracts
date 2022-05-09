@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20CappedUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "./Treasury.sol";
+import "../treasury/Treasury.sol";
 
 /// @title GRID is the main token/currency contract for CryptoGrid game.
 /// @notice GRID will facilitate player based transactions like selling their GPUs/CPUs./ASICs and land on the marketplace. It'll also be used to buy/rent land from the game where the tokens will be burned to ensure it will be sustainable.
@@ -25,8 +25,6 @@ contract Grid is Initializable, ERC20CappedUpgradeable, OwnableUpgradeable{
 	address public developmentSpender; // initial supply 25% approval to developer multi-sig wallet to fund development of the game
 	address public incentivesSpender; // initial supply 25% approval for incentives for players to stake their tokens into sushiswap farm and ensure stability of price
 
-	/// @notice GRID contract startup
-	/// @dev Name: CryptoGrid,  Symbol: GRID, Decimals: 18
 	// constructor()
 	// 	// address _treasuryAddress
 	// 	//    address _marketing,
@@ -57,11 +55,13 @@ contract Grid is Initializable, ERC20CappedUpgradeable, OwnableUpgradeable{
 	// 	//    approve(_incentivesSpender, c_initial_supply*10**18/4);
 	// }
 
+	/// @notice GRID contract startup
+	/// @dev Name: CryptoGrid,  Symbol: GRID, Decimals: 18
     function initialize() external initializer{
         __ERC20_init("CryptoGrid", "GRID");
         __ERC20Capped_init_unchained(MAXIMUM_SUPPLY);
 		__Ownable_init();
-		// _mint(msg.sender, INITIAL_SUPPLY);
+		_mint(msg.sender, INITIAL_SUPPLY);
     }
 
 	// function createLiquidityPool() {}
