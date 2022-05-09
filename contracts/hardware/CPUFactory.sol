@@ -15,7 +15,7 @@ contract CPUFactory is Ownable {
 	constructor(address _aggregatorAddress, address _upgradeTokenAddress) {
 		aggregatorAddress_ = _aggregatorAddress;
 		upgradeTokenAddress_ = _upgradeTokenAddress;
-		createNewCPU("Intel", "i5", "4990k", 0);
+		createNewCPU("Intel", "i5", "4990k", 0, "");
 	}
 
 	// createNewCPU creates a new NFT based CPU which can be classified as a brand of CPU, series and name of the CPU
@@ -23,9 +23,10 @@ contract CPUFactory is Ownable {
 		string memory _brand,
 		string memory _series,
 		string memory _name,
-		uint256 _basePrice
+		uint256 _basePrice,
+		string memory _imageURI
 	) public onlyOwner {
-		CPU cpu = new CPU(_brand, _series, _name, _basePrice, upgradeTokenAddress_, aggregatorAddress_);
+		CPU cpu = new CPU(_brand, _series, _name, _basePrice, upgradeTokenAddress_, aggregatorAddress_, _imageURI);
 		availableCPUs_.push(cpu);
 	}
 }
