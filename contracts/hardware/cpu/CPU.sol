@@ -33,15 +33,16 @@ contract CPU is ERC721, Ownable {
 	constructor(
 		string memory _brand,
 		string memory _series,
-		string memory _name,
+		string memory _CPUname,
 		uint256 _basePrice,
 		address _upgradeToken,
 		address _priceFeed,
 		string memory _imageURI
 	)
 		// string _imageLegendaryURI etc...
-		ERC721(string(abi.encodePacked(_brand, " ", _series, " ", _name)), "gridCPU")
+		ERC721(string(abi.encodePacked(_brand, " ", _series, " ", _CPUname)), "gridCPU")
 	{
+		require(address(_priceFeed) != address(0) && address(_upgradeToken) != address(0), "Addresses cannot be 0");
 		priceFeed = AggregatorV3Interface(_priceFeed);
 		basePrice = _basePrice;
 		upgradeToken = _upgradeToken;

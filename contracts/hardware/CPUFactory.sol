@@ -13,6 +13,7 @@ contract CPUFactory is Ownable {
 	address public upgradeTokenAddress_;
 
 	constructor(address _aggregatorAddress, address _upgradeTokenAddress) {
+		require(address(_aggregatorAddress) != address(0) && address(_upgradeTokenAddress) != address(0), "Addresses cannot be 0");
 		aggregatorAddress_ = _aggregatorAddress;
 		upgradeTokenAddress_ = _upgradeTokenAddress;
 		createNewCPU("Intel", "i5", "4990k", 0, "");

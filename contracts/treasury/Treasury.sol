@@ -25,6 +25,7 @@ contract Treasury is Ownable {
 	}
 
 	function withdrawTokens(address tokenAddress, uint256 amount) public onlyOwner {
+		require(address(tokenAddress) != address(0), "Invalid address");
 		IERC20 tokenContract = IERC20(tokenAddress);
 		uint256 tokenBalance = tokenContract.balanceOf(address(this));
 		require(tokenBalance >= amount, "Insufficient token balance");
