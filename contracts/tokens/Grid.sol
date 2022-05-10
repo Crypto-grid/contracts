@@ -3,14 +3,13 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20CappedUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "../treasury/Treasury.sol";
 
 /// @title GRID is the main token/currency contract for CryptoGrid game.
 /// @notice GRID will facilitate player based transactions like selling their GPUs/CPUs./ASICs and land on the marketplace. It'll also be used to buy/rent land from the game where the tokens will be burned to ensure it will be sustainable.
 /// @dev 750 million hard cap for the GRID token / 25 million tokens minted on contract deployment
-contract Grid is Initializable, ERC20CappedUpgradeable, OwnableUpgradeable{
+contract Grid is Initializable, ERC20CappedUpgradeable{
 	uint256 public constant MAXIMUM_SUPPLY = 750000000 * 1e18;
 	uint256 public constant INITIAL_SUPPLY = 25000000 * 1e18;
 
@@ -60,9 +59,6 @@ contract Grid is Initializable, ERC20CappedUpgradeable, OwnableUpgradeable{
     function initialize() external initializer{
         __ERC20_init("CryptoGrid", "GRID");
         __ERC20Capped_init_unchained(MAXIMUM_SUPPLY);
-		__Ownable_init();
 		_mint(msg.sender, INITIAL_SUPPLY);
     }
-
-	// function createLiquidityPool() {}
 }
