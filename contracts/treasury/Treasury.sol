@@ -33,6 +33,7 @@ contract Treasury is Ownable {
 
 	function withdrawEther(uint256 _amount) public onlyOwner {
 		require(address(this).balance >= _amount, "Insufficient ether balance");
+		require(address(msg.sender) != address(0), "Invalid address");
 		payable(address(msg.sender)).transfer(_amount);
 	}
 }

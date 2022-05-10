@@ -10,8 +10,8 @@ import "../treasury/Treasury.sol";
 /// @notice GRID will facilitate player based transactions like selling their GPUs/CPUs./ASICs and land on the marketplace. It'll also be used to buy/rent land from the game where the tokens will be burned to ensure it will be sustainable.
 /// @dev 750 million hard cap for the GRID token / 25 million tokens minted on contract deployment
 contract Grid is Initializable, ERC20CappedUpgradeable{
-	uint256 public constant MAXIMUM_SUPPLY = 750000000 * 1e18;
-	uint256 public constant INITIAL_SUPPLY = 25000000 * 1e18;
+	uint256 public constant MAXIMUM_SUPPLY = 750 * 1e24;
+	uint256 public constant INITIAL_SUPPLY = 25 * 1e24;
 
 	// token holders / spenders
 	address public marketing; // initial 10% allocation to marketing to gather new players to the game (5 year based schedule)

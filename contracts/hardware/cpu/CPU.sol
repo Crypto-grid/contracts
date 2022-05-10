@@ -5,14 +5,16 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "base64-sol/base64.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "../../interfaces/IBERC20.sol";
 
 contract CPU is ERC721, Ownable {
 	// This pricefeed will be for the ETH/USD so there is some variation in the price
 	AggregatorV3Interface internal priceFeed;
-	uint256 public idCount_ = 0;
-	uint256 public basePrice_;
-	address public upgradeToken_;
+	uint256 public idCount = 0;
+	uint256 public basePrice;
+	address public upgradeToken;
+	uint256 mintStatus;
 
 	enum Rarity {
 		Common,
@@ -41,30 +43,30 @@ contract CPU is ERC721, Ownable {
 		ERC721(string(abi.encodePacked(_brand, " ", _series, " ", _name)), "gridCPU")
 	{
 		priceFeed = AggregatorV3Interface(_priceFeed);
-		basePrice_ = _basePrice;
-		upgradeToken_ = _upgradeToken;
+		basePrice = _basePrice;
+		upgradeToken = _upgradeToken;
 		rarityToImageMapping[Rarity.Common] = _imageURI;
 	}
 
 	function getBasePrice() public view returns (uint256) {
-		return basePrice_;
+		return basePrice;
 	}
 
 	// changeBasePrice should only be executed once a governance vote has passed
 	function changeBasePrice(uint256 _basePrice) public onlyOwner {
-		basePrice_ = _basePrice;
+		basePrice = _basePrice;
 	}
 
 	function mint() public {
-		IBERC20 _upgrade = IBERC20(upgradeToken_);
+		IBERC20 _upgrade = IBERC20(upgradeToken);
 		uint256 price = getMintPrice();
-		require(_upgrade.transferFrom(msg.sender, address(this), price), "Insufficient allowance");
+		idCount++;
+		require(_upgrade.transfer(address(this), price), "Insufficient allowance");
 		_upgrade.burn(price);
+		tokenIDRarityMapping[idCount] = Rarity.Common;
 
 		// TODO: Implement logic for randomness with chainlink VRF v2 or something
-		_safeMint(msg.sender, idCount_);
-		tokenIDRarityMapping[idCount_] = Rarity.Common;
-		idCount_++;
+		_safeMint(msg.sender, idCount);
 	}
 
 	function getMintPrice() public view returns (uint256) {
@@ -72,7 +74,7 @@ contract CPU is ERC721, Ownable {
 		(, int256 price, , , ) = priceFeed.latestRoundData();
 		uint256 uPrice = uint256(price) * 1e18;
 		// pegged to ETH/USD
-		return ((1000 * 1e18) * basePrice_) / uPrice;
+		return ((1000 * 1e18) * basePrice) / uPrice;
 	}
 
 	function _baseURI() internal pure override returns (string memory) {
