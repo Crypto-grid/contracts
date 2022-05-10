@@ -16,7 +16,7 @@ contract Upgrades is ERC20BurnableUpgradeable, OwnableUpgradeable {
 
 	// prevent transfer of tokens to prevent users from transfering to themselves
 	// and transfering to other players to progress faster.
-	function _beforeTokenTransfer (
+	function _beforeTokenTransfer(
 		address from,
 		address to,
 		uint256 amount
