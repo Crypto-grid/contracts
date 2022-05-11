@@ -2,12 +2,43 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "../account/Administrator.sol";
 
-contract Treasury is Ownable {
+contract Treasury {
+	// administrators that can handle treasury spend allowances
+	// future: implement voting triad (or other governance option)
+	Administrators treasuryAdmin = new Administrators();
+
 	event TokenDepositEvent(address indexed depositorAddress, address indexed tokenContractAddress, uint256 amount);
 
-	function depositToken(address _token, uint256 _amount) public {
+	/// @notice define tresury contract administrators
+	/// @dev setup administrator in a way that only one of the 3 admins can perform treasury actions
+	/// @param _admin1 1st administrator
+	/// @param _admin2 2nd administrator
+	/// @param _admin3 3rd administrator
+	function setTreasuryAdminstrators(
+		address _admin1,
+		address _admin2,
+		address _admin3
+	) internal {
+		treasuryAdmin.setAdminstrators(_admin1, _admin2, _admin3);
+	}
+
+	/// @notice Ensure that administrators are set
+	/// @dev Only allow function call if administrators are defined
+	modifier definedAdmins() {
+		require(treasuryAdmin.adminsAreDefined(), "Treasury: admins must be defined");
+		_;
+	}
+
+	/// @notice Only token administrators
+	/// @dev Only token admins can proceed to the next step
+	modifier onlyAdmin() {
+		require(treasuryAdmin.isAdminCaller(msg.sender), "Treasury: must be token admin");
+		_;
+	}
+
+	function depositToken(address _token, uint256 _amount) public definedAdmins {
 		require(_token != address(0) && _amount <= 0, "Treasury: invalid parameters");
 		IERC20 token_ = IERC20(_token);
 		require(token_.transferFrom(msg.sender, address(this), _amount), "Treasury: insufficient allowance");
@@ -15,7 +46,7 @@ contract Treasury is Ownable {
 		emit TokenDepositEvent(msg.sender, _token, _amount);
 	}
 
-	function depositEther() public payable {
+	function depositEther() public payable definedAdmins {
 		require(msg.value > 0, "Treasury: invalid parameters");
 	}
 
@@ -24,15 +55,15 @@ contract Treasury is Ownable {
 		return tokenContract.balanceOf(address(this));
 	}
 
-	function withdrawTokens(address tokenAddress, uint256 amount) public onlyOwner {
+	function withdrawTokens(address tokenAddress, uint256 amount) public definedAdmins onlyAdmin {
 		require(address(tokenAddress) != address(0), "Invalid address");
 		IERC20 tokenContract = IERC20(tokenAddress);
 		uint256 tokenBalance = tokenContract.balanceOf(address(this));
 		require(tokenBalance >= amount, "Insufficient token balance");
-		tokenContract.transfer(owner(), amount);
+		tokenContract.transfer(msg.sender, amount);
 	}
 
-	function withdrawEther(uint256 _amount) public onlyOwner {
+	function withdrawEther(uint256 _amount) public definedAdmins onlyAdmin {
 		require(address(this).balance >= _amount, "Insufficient ether balance");
 		require(address(msg.sender) != address(0), "Invalid address");
 		payable(address(msg.sender)).transfer(_amount);
