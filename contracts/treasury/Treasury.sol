@@ -40,8 +40,8 @@ contract Treasury {
 
 	function depositToken(address _token, uint256 _amount) public definedAdmins {
 		require(_token != address(0) && _amount <= 0, "Treasury: invalid parameters");
-		IERC20 token_ = IERC20(_token);
-		require(token_.transferFrom(msg.sender, address(this), _amount), "Treasury: insufficient allowance");
+		IERC20 tokenContract = IERC20(_token);
+		require(tokenContract.transferFrom(msg.sender, address(this), _amount), "Treasury: insufficient allowance");
 
 		emit TokenDepositEvent(msg.sender, _token, _amount);
 	}
@@ -50,22 +50,22 @@ contract Treasury {
 		require(msg.value > 0, "Treasury: invalid parameters");
 	}
 
-	function getTokenBalance(address token) public view returns (uint256) {
-		IERC20 tokenContract = IERC20(token);
+	function getTokenBalance(address _token) public view returns (uint256) {
+		IERC20 tokenContract = IERC20(_token);
 		return tokenContract.balanceOf(address(this));
 	}
 
-	function withdrawTokens(address tokenAddress, uint256 amount) public definedAdmins onlyAdmin {
-		require(address(tokenAddress) != address(0), "Invalid address");
-		IERC20 tokenContract = IERC20(tokenAddress);
+	function withdrawTokens(address _token, uint256 amount) public definedAdmins onlyAdmin {
+		require(address(_token) != address(0), "Treasury: Invalid address");
+		IERC20 tokenContract = IERC20(_token);
 		uint256 tokenBalance = tokenContract.balanceOf(address(this));
-		require(tokenBalance >= amount, "Insufficient token balance");
-		tokenContract.transfer(msg.sender, amount);
+		require(tokenBalance >= amount, "Treasury: Insufficient token balance");
+		require(tokenContract.transfer(msg.sender, amount), "Treasury: unable to withdraw");
 	}
 
 	function withdrawEther(uint256 _amount) public definedAdmins onlyAdmin {
-		require(address(this).balance >= _amount, "Insufficient ether balance");
-		require(address(msg.sender) != address(0), "Invalid address");
+		require(address(this).balance >= _amount, "Treasury: Insufficient ether balance");
+		require(address(msg.sender) != address(0), "Treasury: Invalid address");
 		payable(address(msg.sender)).transfer(_amount);
 	}
 }
