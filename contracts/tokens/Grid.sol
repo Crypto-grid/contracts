@@ -30,10 +30,15 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 
 	/// @notice GRID contract startup
 	/// @dev Name: CryptoGrid,  Symbol: GRID, Decimals: 18
-	function initialize() external initializer {
+	function initialize(
+    address _admin1,
+    address _admin2,
+    address _admin3
+  ) external initializer {
 		__ERC20_init("CryptoGrid", "GRID");
 		__ERC20Capped_init_unchained(MAXIMUM_SUPPLY);
 		_mint(msg.sender, INITIAL_SUPPLY);
+    setGridAdminstrators(_admin1, _admin2, _admin3);
 	}
 
 	/// @notice define token contract administrators
@@ -45,7 +50,7 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 		address _admin1,
 		address _admin2,
 		address _admin3
-	) internal {
+	) public {
 		gridAdmin.setAdminstrators(_admin1, _admin2, _admin3);
 	}
 
