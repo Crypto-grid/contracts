@@ -31,14 +31,13 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 	/// @notice GRID contract startup
 	/// @dev Name: CryptoGrid,  Symbol: GRID, Decimals: 18
 	function initialize(
-    address _admin1,
     address _admin2,
     address _admin3
   ) external initializer {
 		__ERC20_init("CryptoGrid", "GRID");
 		__ERC20Capped_init_unchained(MAXIMUM_SUPPLY);
 		_mint(msg.sender, INITIAL_SUPPLY);
-    setGridAdminstrators(_admin1, _admin2, _admin3);
+    setGridAdminstrators(msg.sender, _admin2, _admin3);
 	}
 
 	/// @notice define token contract administrators
@@ -50,7 +49,7 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 		address _admin1,
 		address _admin2,
 		address _admin3
-	) public {
+	) internal {
 		gridAdmin.setAdminstrators(_admin1, _admin2, _admin3);
 	}
 
@@ -72,7 +71,7 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 	/// @dev Define a given amount to be transfered to treasury and set admin spenders
 	/// @param _treasuryContractAddress treasury contract address
 	/// @param _amount amount to transfer
-	function allocateTreasuryFunds(address _treasuryContractAddress, uint256 _amount) internal onlyAdmin definedAdmins {
+	function allocateTreasuryFunds(address _treasuryContractAddress, uint256 _amount) public onlyAdmin definedAdmins {
 		treasury.depositToken(_treasuryContractAddress, _amount);
 	}
 }
