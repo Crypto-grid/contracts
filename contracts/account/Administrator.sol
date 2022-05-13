@@ -12,7 +12,7 @@ contract Administrators {
 	function setAdminstrators(
 		address[3] memory _admin
 	) public {
-		require(_admin[0] != _admin[1] && _admin[0] != _admin[2] && _admin[1] != _admin[2], "Admins must be different addresses");
+		require(_admin[0] != _admin[1] && _admin[0] != _admin[2] && _admin[1] != _admin[2], "Contract adminstrators must have different addresses");
 		admin[0] = _admin[0];
 		admin[1] = _admin[1];
 		admin[2] = _admin[2];    

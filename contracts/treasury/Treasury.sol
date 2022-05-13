@@ -31,14 +31,14 @@ contract Treasury {
 	/// @notice Ensure that administrators are set
 	/// @dev Only allow function call if administrators are defined
 	modifier definedAdmins() {
-		require(treasuryAdmin.adminsAreDefined(), "Treasury: admins must be defined");
+		require(treasuryAdmin.adminsAreDefined(), "Treasury: administrators must be defined");
 		_;
 	}
 
 	/// @notice Only token administrators
 	/// @dev Only token admins can proceed to the next step
 	modifier onlyAdmin() {
-		require(treasuryAdmin.isAdminCaller(msg.sender), "Treasury: must be token admin");
+		require(treasuryAdmin.isAdminCaller(msg.sender), "Treasury: must be token administrator");
 		_;
 	}
 
