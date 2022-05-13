@@ -47,6 +47,11 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 		address _admin2,
 		address _admin3
 	) internal {
+    // allow first call to anybody: contract creator + 2 admins
+    // prevent 2nd call onwards if the caller is not admin
+    if (gridAdmin.adminsAreDefined()) {
+      require(gridAdmin.isAdminCaller(msg.sender), "Grid: must be token administrator");
+    }
     address[3] memory _admin;
     _admin[0] = _admin1;
     _admin[1] = _admin2;
@@ -57,14 +62,14 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 	/// @notice Ensure that administrators are set
 	/// @dev Only allow function call if administrators are defined
 	modifier definedAdmins() {
-		require(gridAdmin.adminsAreDefined(), "Grid: admins must be defined");
+		require(gridAdmin.adminsAreDefined(), "Grid: administrators must be defined");
 		_;
 	}
 
 	/// @notice Only token administrators
 	/// @dev Only token admins can proceed to the next step
 	modifier onlyAdmin() {
-		require(gridAdmin.isAdminCaller(msg.sender), "Grid: must be token admin");
+		require(gridAdmin.isAdminCaller(msg.sender), "Grid: must be token administrator");
 		_;
 	}
 
