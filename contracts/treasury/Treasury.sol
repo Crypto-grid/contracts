@@ -21,10 +21,10 @@ contract Treasury {
 		address _admin2,
 		address _admin3
 	) internal {
-    address[3] memory _admin;
-    _admin[0] = _admin1;
-    _admin[1] = _admin2;
-    _admin[2] = _admin3;
+		address[3] memory _admin;
+		_admin[0] = _admin1;
+		_admin[1] = _admin2;
+		_admin[2] = _admin3;
 		treasuryAdmin.setAdminstrators(_admin);
 	}
 
