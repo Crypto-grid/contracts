@@ -5,9 +5,18 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../account/Administrator.sol";
 
 contract Treasury {
+
+  address immutable gridTokeAddress;
+
 	// administrators that can handle treasury spend allowances
 	// future: implement voting triad (or other governance option)
-	Administrators treasuryAdmin = new Administrators();
+	Administrators treasuryAdmin;
+
+  constructor(address _gridTokeAddress, address[3] memory _admin) {
+    require(_gridTokeAddress != address(0), "Treasury: need a valid token address");
+    gridTokeAddress = _gridTokeAddress;
+    treasuryAdmin = new Administrators(_admin);
+  }
 
 	event TokenDepositEvent(address indexed depositorAddress, address indexed tokenContractAddress, uint256 amount);
 
@@ -42,26 +51,24 @@ contract Treasury {
 		_;
 	}
 
-	function depositToken(address _token, uint256 _amount) public definedAdmins {
-		require(_token != address(0) && _amount <= 0, "Treasury: invalid parameters");
-		IERC20 tokenContract = IERC20(_token);
+	function depositToken(uint256 _amount) public definedAdmins {
+		require(_amount > 0, "Treasury: cannon deposit zero amount");
+		IERC20 tokenContract = IERC20(gridTokeAddress);
 		require(tokenContract.transferFrom(msg.sender, address(this), _amount), "Treasury: insufficient allowance");
-
-		emit TokenDepositEvent(msg.sender, _token, _amount);
+		emit TokenDepositEvent(msg.sender, gridTokeAddress, _amount);
 	}
 
 	function depositEther() public payable definedAdmins {
 		require(msg.value > 0, "Treasury: invalid parameters");
 	}
 
-	function getTokenBalance(address _token) public view returns (uint256) {
-		IERC20 tokenContract = IERC20(_token);
+	function getTokenBalance() public view returns (uint256) {
+		IERC20 tokenContract = IERC20(gridTokeAddress);
 		return tokenContract.balanceOf(address(this));
 	}
 
-	function withdrawTokens(address _token, uint256 amount) public definedAdmins onlyAdmin {
-		require(address(_token) != address(0), "Treasury: Invalid address");
-		IERC20 tokenContract = IERC20(_token);
+	function withdrawTokens(uint256 amount) public definedAdmins onlyAdmin {
+		IERC20 tokenContract = IERC20(gridTokeAddress);
 		uint256 tokenBalance = tokenContract.balanceOf(address(this));
 		require(tokenBalance >= amount, "Treasury: Insufficient token balance");
 		require(tokenContract.transfer(msg.sender, amount), "Treasury: unable to withdraw");
