@@ -9,13 +9,11 @@ contract Administrators {
 	/// @notice define token contract administrators
 	/// @dev setup administrator in a way that only one of the 3 admins can perform token actions
 	/// @param _admin array of administators
-	function setAdminstrators(
-		address[3] memory _admin
-	) public {
+	function setAdminstrators(address[3] memory _admin) public {
 		require(_admin[0] != _admin[1] && _admin[0] != _admin[2] && _admin[1] != _admin[2], "Contract adminstrators must have different addresses");
 		admin[0] = _admin[0];
 		admin[1] = _admin[1];
-		admin[2] = _admin[2];    
+		admin[2] = _admin[2];
 	}
 
 	/// @notice Inform if administrators are already defined
