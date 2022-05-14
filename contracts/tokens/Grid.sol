@@ -19,10 +19,10 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 
 	// administrators that can handle grid token allocations
 	// future: implement voting triad (or other governance option)
-	Administrators gridAdmin = new Administrators();
+	Administrators gridAdmin;
 
 	// initial supply 10% allocation to treasury multi-sig to fund our operation costs and hire staff
-	Treasury treasury = new Treasury();
+	Treasury treasury;
 
 	// address public liquidityPool; // initial supply 30% allocation to liquidity pool on DEX like sushiswap
 	// address public developmentSpender; // initial supply 25% approval to developer multi-sig wallet to fund development of the game
@@ -34,6 +34,7 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 		__ERC20_init("CryptoGrid", "GRID");
 		__ERC20Capped_init_unchained(MAXIMUM_SUPPLY);
 		_mint(msg.sender, INITIAL_SUPPLY);
+		gridAdmin = new Administrators();
 		setGridAdminstrators(msg.sender, _admin2, _admin3);
 	}
 
@@ -47,15 +48,15 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 		address _admin2,
 		address _admin3
 	) internal {
-    // allow first call to anybody: contract creator + 2 admins
-    // prevent 2nd call onwards if the caller is not admin
-    if (gridAdmin.adminsAreDefined()) {
-      require(gridAdmin.isAdminCaller(msg.sender), "Grid: must be token administrator");
-    }
-    address[3] memory _admin;
-    _admin[0] = _admin1;
-    _admin[1] = _admin2;
-    _admin[2] = _admin3;
+		// allow first call to anybody: contract creator + 2 admins
+		// prevent 2nd call onwards if the caller is not admin
+		if (gridAdmin.adminsAreDefined()) {
+			require(gridAdmin.isAdminCaller(msg.sender), "Grid: must be token administrator");
+		}
+		address[3] memory _admin;
+		_admin[0] = _admin1;
+		_admin[1] = _admin2;
+		_admin[2] = _admin3;
 		gridAdmin.setAdminstrators(_admin);
 	}
 
@@ -78,6 +79,7 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 	/// @param _treasuryContractAddress treasury contract address
 	/// @param _amount amount to transfer
 	function allocateTreasuryFunds(address _treasuryContractAddress, uint256 _amount) public onlyAdmin definedAdmins {
+		treasury = new Treasury();
 		treasury.depositToken(_treasuryContractAddress, _amount);
 	}
 }
