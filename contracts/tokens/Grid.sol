@@ -13,16 +13,17 @@ import "../account/Administrator.sol";
 contract Grid is Initializable, ERC20CappedUpgradeable {
 	uint256 public constant MAXIMUM_SUPPLY = 750 * 1e24;
 	uint256 public constant INITIAL_SUPPLY = 25 * 1e24;
+	uint256 public constant INITIAL_TREASURY = 25 * 1e23;
 
 	// token holders / spenders
 	// address public marketing; // initial 10% allocation to marketing to gather new players to the game (5 year based schedule)
 
 	// administrators that can handle grid token allocations
 	// future: implement voting triad (or other governance option)
-	Administrators gridAdmin;
+	Administrators public gridAdmin;
 
 	// initial supply 10% allocation to treasury multi-sig to fund our operation costs and hire staff
-	Treasury treasury;
+	Treasury public treasury;
 
 	// address public liquidityPool; // initial supply 30% allocation to liquidity pool on DEX like sushiswap
 	// address public developmentSpender; // initial supply 25% approval to developer multi-sig wallet to fund development of the game
@@ -33,9 +34,27 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 	function initialize(address _admin2, address _admin3) external initializer {
 		__ERC20_init("CryptoGrid", "GRID");
 		__ERC20Capped_init_unchained(MAXIMUM_SUPPLY);
+
+    // initial minting
 		_mint(msg.sender, INITIAL_SUPPLY);
-		gridAdmin = new Administrators();
-		setGridAdminstrators(msg.sender, _admin2, _admin3);
+
+    // define initial admins
+    address[3] memory initAdmin;
+    initAdmin[0] = msg.sender;
+    initAdmin[1] = _admin2;
+    initAdmin[2] = _admin3;
+
+    // set grid administrators
+		gridAdmin = new Administrators(initAdmin);
+
+    // define treasury contract mapping to grid token and treasury admins (same as grid)
+    treasury = new Treasury(address(this), initAdmin);
+    approve(msg.sender, INITIAL_SUPPLY);
+    approve(address(this), INITIAL_SUPPLY);
+    // transferFrom(address(this), address(treasury), INITIAL_TREASURY);
+    require(transfer(address(treasury), INITIAL_TREASURY), 'Issues with initial treasury transfer');
+    // initiateTreasuryFunds();
+
 	}
 
 	/// @notice define token contract administrators
@@ -74,12 +93,15 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 		_;
 	}
 
+  function getTreasuryTokens() public view returns(uint256) {
+    return treasury.getTokenBalance();
+  }
+
 	/// @notice Allocate token funds to treasury contract
-	/// @dev Define a given amount to be transfered to treasury and set admin spenders
-	/// @param _treasuryContractAddress treasury contract address
+	/// @dev Define a given amount to be transfered to treasury
 	/// @param _amount amount to transfer
-	function allocateTreasuryFunds(address _treasuryContractAddress, uint256 _amount) public onlyAdmin definedAdmins {
-		treasury = new Treasury();
-		treasury.depositToken(_treasuryContractAddress, _amount);
+	function allocateTreasuryFunds(uint256 _amount) public onlyAdmin definedAdmins {
+		treasury.depositToken(_amount);
 	}
+
 }
