@@ -92,12 +92,12 @@ contract CPU is ERC721, Ownable {
 						Base64.encode(
 							bytes(
 								abi.encodePacked(
-									"{\"name\":",
+									'{"name":',
 									name(), // You can add whatever name here
-									"\", \"description\": \"A CPU based hardware for the game cryptogrid\",",
-									"\"attributes\": [\"rarity\": ",
+									'", "description": "A CPU based hardware for the game cryptogrid",',
+									'"attributes": ["rarity": ',
 									_rarity,
-									"]\"image\":\"",
+									']"image":"',
 									rarityToImageMapping[_rarity],
 									"}"
 								)

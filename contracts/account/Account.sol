@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.9;
 
-
 contract Account {
 	struct Acccount {
 		uint256 rebirths;
