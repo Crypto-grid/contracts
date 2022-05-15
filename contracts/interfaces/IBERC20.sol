@@ -8,5 +8,6 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 // It is inherited from ERC20Burnable.
 interface IBERC20 is IERC20 {
 	function burn(uint256 amount) external;
+
 	function burnFrom(address account, uint256 amount) external;
 }
