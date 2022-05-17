@@ -6,9 +6,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "base64-sol/base64.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "../../interfaces/IBERC20.sol";
+import "../interfaces/IBERC20.sol";
 
-contract CPU is ERC721, Ownable {
+contract Hardware is ERC721, Ownable {
 	// This pricefeed will be for the ETH/USD so there is some variation in the price
 	AggregatorV3Interface internal priceFeed;
 	uint256 public idCount = 0;
