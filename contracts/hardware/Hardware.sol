@@ -6,12 +6,15 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "base64-sol/base64.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 import "../interfaces/IBERC20.sol";
 
 contract Hardware is ERC721, Ownable {
 	// This pricefeed will be for the ETH/USD so there is some variation in the price
 	AggregatorV3Interface internal priceFeed;
-	uint256 public idCount = 0;
+
+	using Counters for Counters.Counter;
+	Counters.Counter public idCount;
 	uint256 public basePrice;
 	address public upgradeToken;
 	uint256 mintStatus;
@@ -61,13 +64,13 @@ contract Hardware is ERC721, Ownable {
 	function mint() public {
 		IBERC20 _upgrade = IBERC20(upgradeToken);
 		uint256 price = getMintPrice();
-		idCount++;
+		idCount.increment();
 		require(_upgrade.transfer(address(this), price), "Insufficient allowance");
 		_upgrade.burn(price);
-		tokenIDRarityMapping[idCount] = Rarity.Common;
+		tokenIDRarityMapping[idCount.current()] = Rarity.Common;
 
 		// TODO: Implement logic for randomness with chainlink VRF v2 or something
-		_safeMint(msg.sender, idCount);
+		_safeMint(msg.sender, idCount.current());
 	}
 
 	function getMintPrice() public view returns (uint256) {
