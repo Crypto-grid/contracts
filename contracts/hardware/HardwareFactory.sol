@@ -6,10 +6,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Hardware.sol";
 
 contract HardwareFactory is Ownable {
-	// This array is used to store all available CPUs that can be sold
-	Hardware[] public availableCPUs_;
-	Hardware[] public availableGPUs_;
-	Hardware[] public availableASICs_;
+	// These mappings are used to store all available hardware that can be sold
+	mapping(address => Hardware) public availableCPUs;
+	mapping(address => Hardware) public availableGPUs;
+	mapping(address => Hardware) public availableASICs;
 
 	address public aggregatorAddress_;
 	address public upgradeTokenAddress_;
@@ -37,12 +37,25 @@ contract HardwareFactory is Ownable {
 		HardwareType type_
 	) public onlyOwner {
 		Hardware hw = new Hardware(_brand, _series, _name, _basePrice, upgradeTokenAddress_, aggregatorAddress_, _imageURI);
+		// It'll be so nice if there was generics or switch lol
 		if (type_ == HardwareType.CPU) {
-			availableCPUs_.push(hw);
+			availableCPUs[address(hw)] = hw;
 		}else if (type_ == HardwareType.GPU) {
-			availableGPUs_.push(hw);
+			availableGPUs[address(hw)] = hw;
 		}else if (type_ == HardwareType.ASICS) {
-			availableASICs_.push(hw);
+			availableCPUs[address(hw)] = hw;
+		}else {
+			revert("Invalid hardware type");
+		}
+	}
+
+	function getInstance(HardwareType _type, address _hwAddress) public view returns (Hardware) {
+		if (_type == HardwareType.CPU) {
+			return availableCPUs[_hwAddress];
+		}else if (_type == HardwareType.GPU) {
+			return availableGPUs[_hwAddress];
+		}else if (_type == HardwareType.ASICS) {
+			return availableASICs[_hwAddress];
 		}else {
 			revert("Invalid hardware type");
 		}

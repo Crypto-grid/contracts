@@ -116,4 +116,9 @@ contract Hardware is ERC721, Ownable {
 		string memory svgBase64Encoded = Base64.encode(bytes(string(abi.encodePacked(svg))));
 		return string(abi.encodePacked(baseURL, svgBase64Encoded));
 	}
+
+	function burn(uint256 tokenId) public virtual {
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "You are not authorized to send the token");
+        _burn(tokenId);
+    }
 }
