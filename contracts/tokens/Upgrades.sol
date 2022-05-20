@@ -11,7 +11,7 @@ contract Upgrades is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, 
 	mapping(address => bool) isAllowed;
 
 	function initialize() external initializer {
-		__ERC20_init("Upgrades", "UPGRADES");
+		__ERC20_init("Upgrades", "UPG");
 		__Ownable_init();
 		isAllowed[msg.sender] = true;
 	}
