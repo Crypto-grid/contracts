@@ -6,10 +6,10 @@ contract Administrators {
 	// future: implement voting triad (or other governance option)
 	address[3] public admin;
 
-  // set administrators on contract setup
-  constructor(address[3] memory _admin) {
-    setAdminstrators(_admin);
-  }
+	// set administrators on contract setup
+	constructor(address[3] memory _admin) {
+		setAdminstrators(_admin);
+	}
 
 	/// @notice define token contract administrators
 	/// @dev setup administrator in a way that only one of the 3 admins can perform token actions

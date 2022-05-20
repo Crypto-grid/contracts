@@ -5,18 +5,17 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../account/Administrator.sol";
 
 contract Treasury {
-
-  address immutable gridTokeAddress;
+	address immutable gridTokeAddress;
 
 	// administrators that can handle treasury spend allowances
 	// future: implement voting triad (or other governance option)
 	Administrators treasuryAdmin;
 
-  constructor(address _gridTokeAddress, address[3] memory _admin) {
-    require(_gridTokeAddress != address(0), "Treasury: need a valid token address");
-    gridTokeAddress = _gridTokeAddress;
-    treasuryAdmin = new Administrators(_admin);
-  }
+	constructor(address _gridTokeAddress, address[3] memory _admin) {
+		require(_gridTokeAddress != address(0), "Treasury: need a valid token address");
+		gridTokeAddress = _gridTokeAddress;
+		treasuryAdmin = new Administrators(_admin);
+	}
 
 	event TokenDepositEvent(address indexed depositorAddress, address indexed tokenContractAddress, uint256 amount);
 

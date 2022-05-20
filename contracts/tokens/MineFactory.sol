@@ -8,7 +8,5 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 // there will be 3 coins at the start, gridBTC, gridETH and gridXMR all of them will have the same price to the real world data from
 // chainlinks agregatorv3interface. This contract does not need to be upgraded.
 contract MineFactory {
-    ERC20[] public tokens;
-
-
+	ERC20[] public tokens;
 }

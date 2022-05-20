@@ -39,11 +39,11 @@ contract HardwareFactory is Ownable {
 		Hardware hw = new Hardware(_brand, _series, _name, _basePrice, upgradeTokenAddress_, aggregatorAddress_, _imageURI);
 		if (type_ == HardwareType.CPU) {
 			availableCPUs_.push(hw);
-		}else if (type_ == HardwareType.GPU) {
+		} else if (type_ == HardwareType.GPU) {
 			availableGPUs_.push(hw);
-		}else if (type_ == HardwareType.ASICS) {
+		} else if (type_ == HardwareType.ASICS) {
 			availableASICs_.push(hw);
-		}else {
+		} else {
 			revert("Invalid hardware type");
 		}
 	}

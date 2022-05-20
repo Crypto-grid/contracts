@@ -35,26 +35,25 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 		__ERC20_init("CryptoGrid", "GRID");
 		__ERC20Capped_init_unchained(MAXIMUM_SUPPLY);
 
-    // initial minting
+		// initial minting
 		_mint(msg.sender, INITIAL_SUPPLY);
 
-    // define initial admins
-    address[3] memory initAdmin;
-    initAdmin[0] = msg.sender;
-    initAdmin[1] = _admin2;
-    initAdmin[2] = _admin3;
+		// define initial admins
+		address[3] memory initAdmin;
+		initAdmin[0] = msg.sender;
+		initAdmin[1] = _admin2;
+		initAdmin[2] = _admin3;
 
-    // set grid administrators
+		// set grid administrators
 		gridAdmin = new Administrators(initAdmin);
 
-    // define treasury contract mapping to grid token and treasury admins (same as grid)
-    treasury = new Treasury(address(this), initAdmin);
-    approve(msg.sender, INITIAL_SUPPLY);
-    approve(address(this), INITIAL_SUPPLY);
-    // transferFrom(address(this), address(treasury), INITIAL_TREASURY);
-    require(transfer(address(treasury), INITIAL_TREASURY), 'Issues with initial treasury transfer');
-    // initiateTreasuryFunds();
-
+		// define treasury contract mapping to grid token and treasury admins (same as grid)
+		treasury = new Treasury(address(this), initAdmin);
+		approve(msg.sender, INITIAL_SUPPLY);
+		approve(address(this), INITIAL_SUPPLY);
+		// transferFrom(address(this), address(treasury), INITIAL_TREASURY);
+		require(transfer(address(treasury), INITIAL_TREASURY), "Issues with initial treasury transfer");
+		// initiateTreasuryFunds();
 	}
 
 	/// @notice define token contract administrators
@@ -93,9 +92,9 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 		_;
 	}
 
-  function getTreasuryTokens() public view returns(uint256) {
-    return treasury.getTokenBalance();
-  }
+	function getTreasuryTokens() public view returns (uint256) {
+		return treasury.getTokenBalance();
+	}
 
 	/// @notice Allocate token funds to treasury contract
 	/// @dev Define a given amount to be transfered to treasury
@@ -103,5 +102,4 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 	function allocateTreasuryFunds(uint256 _amount) public onlyAdmin definedAdmins {
 		treasury.depositToken(_amount);
 	}
-
 }
