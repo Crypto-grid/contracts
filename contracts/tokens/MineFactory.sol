@@ -11,7 +11,16 @@ contract MineFactory {
     address[] public tokens;
 
     constructor() {
-        MineToken token = new MineToken("gridXMR", "gridXMR", msg.sender);
+        MineToken btc = new MineToken("gridBTC", "gridBTC", msg.sender);
+        MineToken eth = new MineToken("gridETH", "gridETH", msg.sender);
+        MineToken xmr = new MineToken("gridXMR", "gridXMR", msg.sender);
+        tokens.push(address(btc));
+        tokens.push(address(eth));
+        tokens.push(address(xmr));
+    }
+
+    function getTokens() public view returns (address[] memory) {
+        return tokens;
     }
 }
 
@@ -38,6 +47,10 @@ contract MineToken is ERC20 {
     }
 
     function allowMint(address _address) public onlyOwner {
-        
+        allowed[_address] = true;
+    }
+
+    function burn(uint256 _amount) public {
+        _burn(msg.sender, _amount);
     }
 } 

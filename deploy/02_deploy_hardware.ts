@@ -3,6 +3,9 @@ import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { isBoxedPrimitive } from 'util/types';
 import Networks from "./deploy.json";
+import upgradesContractAddress from './upgradesProxyContractAddress'
+
+ 
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 	const { getNamedAccounts, deployments } = hre;
@@ -12,15 +15,16 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     if (deployments.getNetworkName() === "Mumbai") {
         aggregator = Networks.Mumbai.address.ETHAggregatorV3
     }
-  
+
+
 	await deploy("HardwareFactory", {
 		// Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
 		from: deployer,
-		args: [aggregator, upgrades],
+		args: [aggregator, upgradesContractAddress],
 		log: true,
 	});
 
-	
+	// createNewHardware function to be run 
 
 	/*
     // Getting a previously deployed contract

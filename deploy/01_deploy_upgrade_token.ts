@@ -3,6 +3,9 @@ import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { isBoxedPrimitive } from 'util/types';
 
+
+//TODO: how to get price feeds for btc, eth etc via chainlink?? - arguments for deploy Upgrades
+
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 	const { getNamedAccounts, deployments } = hre;
 	const { deploy } = deployments;
@@ -13,15 +16,20 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 		args: [],
 		log: true,
 	})
+	
 	// above should output: address _gridETH, address _gridBTC, address _gridXMR,
 	// args to be sent in for Upgrades deployment
+	const factory = await ethers.getContractFactory('MineFactory');
+	const mine = await factory.deploy();
+	await mine.deployed();
 
+	// get the mine token contract address
+	const mineContractAddress = mine.address;
 
 	await deploy('Upgrades', {
 		// Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
 		from: deployer,
-		// args: [20000000, randomAccounts[0], randomAccounts[1], randomAccounts[2]],
-		args: [_gridETH, _gridBTC, _gridXMR],
+		args: [btcPF, ethPF, mineContractAddress], // xmrPF - price feed not available on test net 
 		log: true,
 	});
 
@@ -32,6 +40,8 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 
 	await upgradesProxy.deployed();
 	console.log('upgradesProxy deployed to: ', upgradesProxy.address);
+
+	fs.writeFileSync('./upgradesProxyContractAddress.ts', `export const upgradesContractAddress='${upgradesProxy.address}'`);
 
 	/*
     // Getting a previously deployed contract

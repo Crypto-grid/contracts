@@ -2,6 +2,7 @@ import { getUnnamedAccounts, ethers, upgrades } from 'hardhat';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { isBoxedPrimitive } from 'util/types';
+import fs from 'fs'; // to save the contract address locally
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 	const { getNamedAccounts, deployments } = hre;
@@ -22,6 +23,8 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 
 	await gridProxy.deployed();
 	console.log('gridProxy deployed to: ', gridProxy.address);
+
+	fs.writeFileSync('./gridProxyContractAddress.ts', `export const gridProxyContractAddress='${gridProxy.address}'`);
 
 	/*
     // Getting a previously deployed contract
