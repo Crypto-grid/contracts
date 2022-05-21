@@ -20,23 +20,28 @@ contract HardwareFactory is Ownable {
 		ASICS
 	}
 
+	// struct hardwareStruct {
+	//   string brand;
+	//   string series;
+	//   string CPUname;
+	// }
+
 	constructor(address _aggregatorAddress, address _upgradeTokenAddress) {
 		require(address(_aggregatorAddress) != address(0) && address(_upgradeTokenAddress) != address(0), "Addresses cannot be 0");
 		aggregatorAddress_ = _aggregatorAddress;
 		upgradeTokenAddress_ = _upgradeTokenAddress;
-		createNewCPU("Int3l", "i5", "4790k", 0, "", HardwareType.CPU);
+		createNewHardware("Int3l", "i5", "4790k", 0, HardwareType.CPU);
 	}
 
 	// createNewCPU creates a new NFT based CPU which can be classified as a brand of CPU, series and name of the CPU
-	function createNewCPU(
+	function createNewHardware(
 		string memory _brand,
 		string memory _series,
 		string memory _name,
 		uint256 _basePrice,
-		string memory _imageURI,
 		HardwareType type_
 	) public onlyOwner {
-		Hardware hw = new Hardware(_brand, _series, _name, _basePrice, upgradeTokenAddress_, aggregatorAddress_, _imageURI);
+		Hardware hw = new Hardware(Hardware.hardwareStruct(_brand, _series, _name), _basePrice, upgradeTokenAddress_, aggregatorAddress_);
 		if (type_ == HardwareType.CPU) {
 			availableCPUs_.push(hw);
 		} else if (type_ == HardwareType.GPU) {
