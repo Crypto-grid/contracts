@@ -1,39 +1,39 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 pragma solidity ^0.8.9;
 
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-contract Upgrades is ERC20BurnableUpgradeable, OwnableUpgradeable {
-	address[] public allowedAddresses_;
+contract Upgrades is Initializable, ERC20BurnableUpgradeable, OwnableUpgradeable {
+	// map address for token transfer allowance (default is false)
+	mapping(address => bool) isAllowed;
 
-	function initialize() external initializer {
+	function initialize(AggregatorV3Interface _btcPriceFeed, AggregatorV3Interface _ethPriceFeed, address _gridETH, address _gridBTC, address _gridXMR) external initializer {
 		__ERC20_init("Upgrades", "UPGRADES");
 		__Ownable_init();
-		allowedAddresses_ = [msg.sender];
+		isAllowed[msg.sender] = true;
+
 	}
 
 	// prevent transfer of tokens to prevent users from transfering to themselves
 	// and transfering to other players to progress faster.
 	function _beforeTokenTransfer(
-		address from,
-		address to,
-		uint256 amount
+		address _from,
+		address _to,
+		uint256 _amount
 	) internal virtual override {
-		bool allowed = false;
-		for (uint256 i = 0; i < allowedAddresses_.length; i++) {
-			if (allowedAddresses_[i] == to) {
-				allowed = true;
-				return;
-			}
-		}
-
-		require(allowed, "Not in transfer whitelist");
+		require(isAllowed[msg.sender], "Not in transfer whitelist");
 	}
 
 	// Allows UPGRADES token to be sent to our other contacts but not to other players
 	function addAllowedAddress(address _address) public onlyOwner {
-		allowedAddresses_.push(_address);
+		isAllowed[_address] = true;
+	}
+
+	function exchangeForUpgrades(address _address) public {
+
 	}
 }

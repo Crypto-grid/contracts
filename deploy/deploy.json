@@ -1,0 +1,14 @@
+{
+	"Polygon": {
+		"address": {
+			"ETHAggregatorV3": "0xF9680D99D6C9589e2a93a78A04A279e509205945",
+			"ChainlinkVRF": "0xAE975071Be8F8eE67addBC1A82488F1C24858067"
+		}
+	},
+	"Mumbai": {
+		"address": {
+			"ETHAggregatorV3": "0x0715A7794a1dc8e42615F059dD6e406A6594651A",
+			"ChainlinkVRF": "0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed"
+		}
+	}
+}

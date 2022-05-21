@@ -45,7 +45,7 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
     initAdmin[2] = _admin3;
 
     // set grid administrators
-		gridAdmin = new Administrators(initAdmin);
+	gridAdmin = new Administrators(initAdmin);
 
     // define treasury contract mapping to grid token and treasury admins (same as grid)
     treasury = new Treasury(address(this), initAdmin);
