@@ -40,7 +40,7 @@ contract Hardware is ERC721, Ownable {
 		uint256 _basePrice,
 		address _upgradeToken,
 		address _priceFeed,
-		string memory _imageURI
+		string[5] memory _rarityToImageMapping
 	)
 		// string _imageLegendaryURI etc...
 		ERC721(string(abi.encodePacked(_brand, " ", _series, " ", _CPUname)), "gridCPU")
@@ -49,7 +49,10 @@ contract Hardware is ERC721, Ownable {
 		priceFeed = AggregatorV3Interface(_priceFeed);
 		basePrice = _basePrice;
 		upgradeToken = _upgradeToken;
-		rarityToImageMapping[Rarity.Common] = _imageURI;
+
+		for (uint256 i = 0; i < 5; i++) {
+			rarityToImageMapping[Rarity(i)] = _rarityToImageMapping[i];
+		}
 	}
 
 	function getBasePrice() public view returns (uint256) {
@@ -82,34 +85,34 @@ contract Hardware is ERC721, Ownable {
 	}
 
 	function _baseURI() internal pure override returns (string memory) {
-		return "data:application/json;base64,";
+		return "ipfs://";
 	}
 
-	function tokenURI(uint256 tokenId) public view override returns (string memory) {
-		Rarity _rarity = tokenIDRarityMapping[tokenId];
-		if (_rarity == Rarity.Common) {
-			return
-				string(
-					abi.encodePacked(
-						_baseURI(),
-						Base64.encode(
-							bytes(
-								abi.encodePacked(
-									'{"name":',
-									name(), // You can add whatever name here
-									'", "description": "A CPU based hardware for the game cryptogrid",',
-									'"attributes": ["rarity": ',
-									_rarity,
-									']"image":"',
-									rarityToImageMapping[_rarity],
-									"}"
-								)
-							)
-						)
-					)
-				);
-		}
-	}
+	// function tokenURI(uint256 tokenId) public view override returns (string memory) {
+	// 	Rarity _rarity = tokenIDRarityMapping[tokenId];
+	// 	if (_rarity == Rarity.Common) {
+	// 		return
+	// 			string(
+	// 				abi.encodePacked(
+	// 					_baseURI(),
+	// 					Base64.encode(
+	// 						bytes(
+	// 							abi.encodePacked(
+	// 								'{"name":',
+	// 								name(), // You can add whatever name here
+	// 								'", "description": "A CPU based hardware for the game cryptogrid",',
+	// 								'"attributes": ["rarity": ',
+	// 								_rarity,
+	// 								']"image":"',
+	// 								rarityToImageMapping[_rarity],
+	// 								"}"
+	// 							)
+	// 						)
+	// 					)
+	// 				)
+	// 			);
+	// 	}
+	// }
 
 	function svgToImageURI(string memory svg) public pure returns (string memory) {
 		string memory baseURL = "data:image/svg+xml;base64,";
