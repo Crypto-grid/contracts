@@ -15,15 +15,17 @@ const deployFunction: DeployFunction = async () => {
     log(`Local network detected! Deploying mocks...`)
 
     const linkToken = await deploy(`LinkToken`, { from: deployer, log: true })
+    log(`LINKTOKEN contract deployed to: ${linkToken.address}`);
 
-    await deploy(`MockV3Aggregator`, {
+    const deployedMockV3Aggregator = await deploy(`MockV3Aggregator`, {
       contract: `MockV3Aggregator`,
       from: deployer,
       log: true,
       args: [DECIMALS, INITIAL_PRICE],
     })
+    log(`MOCKV3AGGREGATOR contract deployed to: ${deployedMockV3Aggregator.address}`);
 
-    await deploy("VRFCoordinatorV2Mock", {
+    const deployedVRFCoordinatorV2Mock = await await deploy("VRFCoordinatorV2Mock", {
       from: deployer,
       log: true,
       args: [
@@ -31,12 +33,14 @@ const deployFunction: DeployFunction = async () => {
         1e9, // 0.000000001 LINK per gas
       ],
     })
+    log(`VRFCOORDINATORV2MOCK contract deployed to: ${deployedVRFCoordinatorV2Mock.address}`);
 
-    await deploy(`MockOracle`, {
+    const deployedMockOracle = await deploy(`MockOracle`, {
       from: deployer,
       log: true,
       args: [linkToken.address],
     })
+    log(`MOCKORACLE contract deployed to: ${deployedMockOracle.address}`);
 
     log(`Mocks Deployed!`)
     log(`----------------------------------------------------`)
