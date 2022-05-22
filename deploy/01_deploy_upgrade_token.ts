@@ -1,8 +1,13 @@
 import { getUnnamedAccounts, ethers, upgrades, deployments, network } from 'hardhat';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
+// import { deployedContractAddresses } from '../generated/contract-addresses/DeployedContactAddresses';
+// import {
+//   networkConfig,
+//   // developmentChains,
+//   // VERIFICATION_BLOCK_CONFIRMATIONS,
+// } from "../helper-hardhat-config"
 // import { isBoxedPrimitive } from 'util/types';
-
 
 //TODO: how to get price feeds for btc, eth etc via chainlink?? - arguments for deploy Upgrades
 
@@ -12,7 +17,8 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 	const { deploy, log } = deployments;
 	const { deployer } = await getNamedAccounts();
 	const randomAccounts = await getUnnamedAccounts();
-	await deploy('MineFactory', {
+	
+  const mineDeployed = await deploy('MineFactory', {
 		from: deployer,
 		args: [],
 		log: true,
@@ -20,22 +26,36 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 	
 	// above should output: address _gridETH, address _gridBTC, address _gridXMR,
 	// args to be sent in for Upgrades deployment
-	const factory = await ethers.getContractFactory('MineFactory');
-	const mine = await factory.deploy();
-	await mine.deployed();
+	// const factory = await ethers.getContractFactory('MineFactory');
+	// const mine = await factory.deploy();
+	// await mine.deployed();
 
 	// get the mine token contract address
-	const mineContractAddress = mine.address;
-	log(`Mine contract deployed to: ${mine.address}`);
+	const mineContractAddress = mineDeployed.address;
+	log(`MINE contract deployed to: ${mineDeployed.address}`);
 
-	// await deploy('Upgrades', {
-	// 	// Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
-	// 	from: deployer,
-	// 	// args: [btcPF, ethPF, mineContractAddress], // xmrPF - price feed not available on test net 
-	// 	args: [mineContractAddress], // xmrPF - price feed not available on test net 
-	// 	log: true,
-	// });
+  // let ethUsdPriceFeedAddress: string | undefined
+  // if (chainId === 31337) {
+  //   const EthUsdAggregator = await deployments.get("MockV3Aggregator")
+  //   ethUsdPriceFeedAddress = EthUsdAggregator.address
+  // } else {
+  //   ethUsdPriceFeedAddress = undefined
+  // }
+  // log(`EthUsdAggregator contract deployed to: ${ethUsdPriceFeedAddress}`);
 
+  // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
+  const upgradeDeployed = await deploy('Upgrades', {
+		from: deployer,
+		// args: [btcPF, ethPF, mineContractAddress], // xmrPF - price feed not available on test net 
+		// args: [ethUsdPriceFeedAddress, ethUsdPriceFeedAddress, mineContractAddress], // xmrPF - price feed not available on test net 
+		log: true,
+	});
+
+  // call initialize with...
+  // args: [ethUsdPriceFeedAddress, ethUsdPriceFeedAddress, mineContractAddress], // xmrPF - price feed not available on test net 
+
+	log(`UPGRADES contract deployed to: ${upgradeDeployed.address}`);
+  
 	// const upgrades = await ethers.getContractFactory('Upgrades');
 	// const upgradesProxy = await upgrades.deployProxy(grid, {
 	// 	initializer: 'initialize',
