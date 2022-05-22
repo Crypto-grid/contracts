@@ -11,7 +11,7 @@ import "../interfaces/IBERC20.sol";
 
 contract Upgrades is Initializable, ERC20BurnableUpgradeable, OwnableUpgradeable {
 	// map address for token transfer allowance (default is false)
-	mapping(address => bool) isAllowed;
+	mapping(address => bool) public isAllowed;
 
 	// store addresses for gridX to upgrade conversion
 	address public mineFactory;
