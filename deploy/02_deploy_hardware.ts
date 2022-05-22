@@ -1,39 +1,44 @@
-import { getUnnamedAccounts, ethers, upgrades } from 'hardhat';
+import { getUnnamedAccounts, ethers, upgrades, network } from 'hardhat';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { isBoxedPrimitive } from 'util/types';
-import Networks from "./deploy.json";
-// import upgradesContractAddress from './upgradesProxyContractAddress'
+import Networks from "../assets/deploy.json";
+import { deployedContractAddresses } from '../assets/fallbackDeployedContractAddresses'; 
 
- 
+
+// import upgradesContractAddress from './upgradesProxyContractAddress'
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 	const { getNamedAccounts, deployments } = hre;
-	const { deploy } = deployments;
+	const { deploy, log } = deployments;
 	const { deployer } = await getNamedAccounts();
-    var aggregator;
-    if (deployments.getNetworkName() === "Mumbai") {
-        aggregator = Networks.Mumbai.address.ETHAggregatorV3
-    }
 
+  var aggregator;
+  if (deployments.getNetworkName() === "Mumbai") {
+      aggregator = Networks.Mumbai.address.ETHAggregatorV3
+  }
 
-	await deploy("HardwareFactory", {
+  const chainId: number | undefined = network.config.chainId
+
+  let ethUsdPriceFeedAddress: string | undefined
+  if (chainId === 31337) {
+    const EthUsdAggregator = await deployments.get("MockV3Aggregator")
+    ethUsdPriceFeedAddress = EthUsdAggregator.address
+  } else {
+    ethUsdPriceFeedAddress = undefined
+  }
+  log(`EthUsdAggregator contract deployed to: ${ethUsdPriceFeedAddress}`);
+
+  // constructor(address _aggregatorAddress, address _upgradeTokenAddress) {
+	const deployed = await deploy("HardwareFactory", {
 		// Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
 		from: deployer,
 		// args: [aggregator, upgradesContractAddress],
-		args: [aggregator, '0x'],
+		args: [ethUsdPriceFeedAddress, deployedContractAddresses.local.upgrades],
 		log: true,
 	});
 
-	// createNewHardware function to be run 
-
-	/*
-    // Getting a previously deployed contract
-    const YourContract = await ethers.getContract("YourContract", deployer);
-    await YourContract.setPurpose("Hello");
-
-    //const yourContract = await ethers.getContractAt('YourContract', "0xaAC799eC2d00C013f1F11c37E654e59B0429DF6A") //<-- if you want to instantiate a version of a contract at a specific address!
-  */
+  log(`HARDWAREFACTORY contract deployed to: ${deployed.address}`);
+	
 };
 export default func;
 func.tags = ["Hardware"];
