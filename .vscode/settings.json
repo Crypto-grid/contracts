@@ -1,8 +1,35 @@
 {
   "solidity.compileUsingRemoteVersion": "v0.8.13+commit.abaa5c0e",
   "cSpell.words": [
+    "atixlabs",
+    "BCRMGNAH",
+    "bignumber",
     "Chainlink",
+    "cryptogrid",
+    "defi",
+    "DVEX",
+    "eslintignore",
+    "ethersproject",
+    "FSGFZ",
+    "fundedwallet",
+    "HARDWAREFACTORY",
+    "hdkey",
+    "hdwallet",
+    "informations",
     "IPFS",
-    "Tokenomics"
+    "keccak",
+    "LINKTOKEN",
+    "MOCKORACLE",
+    "MOCKV",
+    "nomiclabs",
+    "postdeploy",
+    "qrcode",
+    "sendresult",
+    "solhint",
+    "Tokenomics",
+    "txparams",
+    "typechain",
+    "vite",
+    "VRFCOORDINATORV"
   ]
 }
