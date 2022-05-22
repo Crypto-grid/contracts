@@ -1,14 +1,15 @@
-import { getUnnamedAccounts, ethers, upgrades } from 'hardhat';
+import { getUnnamedAccounts, ethers, upgrades, deployments, network } from 'hardhat';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { isBoxedPrimitive } from 'util/types';
+// import { isBoxedPrimitive } from 'util/types';
 
 
 //TODO: how to get price feeds for btc, eth etc via chainlink?? - arguments for deploy Upgrades
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 	const { getNamedAccounts, deployments } = hre;
-	const { deploy } = deployments;
+  const chainId: number | undefined = network.config.chainId
+	const { deploy, log } = deployments;
 	const { deployer } = await getNamedAccounts();
 	const randomAccounts = await getUnnamedAccounts();
 	await deploy('MineFactory', {
@@ -25,23 +26,25 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 
 	// get the mine token contract address
 	const mineContractAddress = mine.address;
+	log(`Mine contract deployed to: ${mine.address}`);
 
-	await deploy('Upgrades', {
-		// Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
-		from: deployer,
-		args: [btcPF, ethPF, mineContractAddress], // xmrPF - price feed not available on test net 
-		log: true,
-	});
+	// await deploy('Upgrades', {
+	// 	// Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
+	// 	from: deployer,
+	// 	// args: [btcPF, ethPF, mineContractAddress], // xmrPF - price feed not available on test net 
+	// 	args: [mineContractAddress], // xmrPF - price feed not available on test net 
+	// 	log: true,
+	// });
 
-	const upgrades = await ethers.getContractFactory('Upgrades');
-	const upgradesProxy = await upgrades.deployProxy(grid, {
-		initializer: 'initialize',
-	});
+	// const upgrades = await ethers.getContractFactory('Upgrades');
+	// const upgradesProxy = await upgrades.deployProxy(grid, {
+	// 	initializer: 'initialize',
+	// });
 
-	await upgradesProxy.deployed();
-	console.log('upgradesProxy deployed to: ', upgradesProxy.address);
+	// await upgradesProxy.deployed();
+	// console.log('upgradesProxy deployed to: ', upgradesProxy.address);
 
-	fs.writeFileSync('./upgradesProxyContractAddress.ts', `export const upgradesContractAddress='${upgradesProxy.address}'`);
+	// fs.writeFileSync('./upgradesProxyContractAddress.ts', `export const upgradesContractAddress='${upgradesProxy.address}'`);
 
 	/*
     // Getting a previously deployed contract

@@ -1,38 +1,37 @@
-import { getUnnamedAccounts, ethers, upgrades } from 'hardhat';
+import { getUnnamedAccounts, ethers, upgrades, deployments, network } from 'hardhat';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { isBoxedPrimitive } from 'util/types';
 import fs from 'fs'; // to save the contract address locally
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 	const { getNamedAccounts, deployments } = hre;
-	const { deploy } = deployments;
+  const chainId: number | undefined = network.config.chainId
+	const { deploy, log } = deployments;
 	const { deployer } = await getNamedAccounts();
 	const randomAccounts = await getUnnamedAccounts();
-	await deploy('Grid', {
-		// Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
-		from: deployer,
-		// args: [20000000, randomAccounts[0], randomAccounts[1], randomAccounts[2]],
-		log: true,
-	});
+	
+  // deploy grid contract  
+	const Grid = await ethers.getContractFactory('Grid');
+	const gridInstance = await upgrades.deployProxy(
+    Grid, [ 
+      randomAccounts[0], 
+      randomAccounts[1] 
+    ]
+  );
+	await gridInstance.deployed();
+	log(`grid deployed to: ${gridInstance.address}`);
 
-	const grid = await ethers.getContractFactory('Grid');
-	const gridProxy = await upgrades.deployProxy(grid, {
-		initializer: 'initialize',
-	});
+  // save contract address
+  try {
+    fs.writeFileSync(
+      //'../generated/contract-types/gridAddress.ts', 
+      'gridAddress.ts', 
+      `export const gridProxyContractAddress=${gridInstance.address}`
+    );
+  } catch (err) {
+    console.error(err);
+  }  
 
-	await gridProxy.deployed();
-	console.log('gridProxy deployed to: ', gridProxy.address);
-
-	fs.writeFileSync('./gridProxyContractAddress.ts', `export const gridProxyContractAddress='${gridProxy.address}'`);
-
-	/*
-    // Getting a previously deployed contract
-    const YourContract = await ethers.getContract("YourContract", deployer);
-    await YourContract.setPurpose("Hello");
-
-    //const yourContract = await ethers.getContractAt('YourContract', "0xaAC799eC2d00C013f1F11c37E654e59B0429DF6A") //<-- if you want to instantiate a version of a contract at a specific address!
-  */
 };
 export default func;
 func.tags = ['Grid'];
