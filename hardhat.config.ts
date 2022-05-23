@@ -108,14 +108,15 @@ const config: HardhatUserConfig = {
         mnemonic: getMnemonic(),
       },
     },
-    xdai: {
-      url: 'https://rpc.xdaichain.com/',
+    Mumbai: {
+      url: 'https://rpc-mumbai.maticvigil.com/',
       gasPrice: 1000000000,
+      chainId: 80001,
       accounts: {
         mnemonic: getMnemonic(),
       },
     },
-    matic: {
+    Polygon: {
       url: 'https://rpc-mainnet.maticvigil.com/',
       gasPrice: 1000000000,
       accounts: {
@@ -126,7 +127,7 @@ const config: HardhatUserConfig = {
   solidity: {
     compilers: [
       {
-        version: '0.8.9',
+        version: '0.8.14',
         settings: {
           optimizer: {
             enabled: true,
@@ -143,6 +144,12 @@ const config: HardhatUserConfig = {
           },
         },
       },
+      {
+        version: "0.6.6",
+      },
+      {
+        version: "0.4.24",
+      },      
     ],
   },
   paths: {

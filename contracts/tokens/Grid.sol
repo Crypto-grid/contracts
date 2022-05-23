@@ -45,14 +45,14 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
     initAdmin[2] = _admin3;
 
     // set grid administrators
-		gridAdmin = new Administrators(initAdmin);
+	gridAdmin = new Administrators(initAdmin);
 
     // define treasury contract mapping to grid token and treasury admins (same as grid)
     treasury = new Treasury(address(this), initAdmin);
     approve(msg.sender, INITIAL_SUPPLY);
     approve(address(this), INITIAL_SUPPLY);
     // transferFrom(address(this), address(treasury), INITIAL_TREASURY);
-    require(transfer(address(treasury), INITIAL_TREASURY), 'Issues with initial treasury transfer');
+    require(transfer(address(treasury), INITIAL_TREASURY), "Issues on treasury transfer");
     // initiateTreasuryFunds();
 
 	}
@@ -70,7 +70,7 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 		// allow first call to anybody: contract creator + 2 admins
 		// prevent 2nd call onwards if the caller is not admin
 		if (gridAdmin.adminsAreDefined()) {
-			require(gridAdmin.isAdminCaller(msg.sender), "Grid: must be token administrator");
+			require(gridAdmin.isAdminCaller(msg.sender), "Grid: must be token admin");
 		}
 		address[3] memory _admin;
 		_admin[0] = _admin1;
@@ -82,14 +82,14 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 	/// @notice Ensure that administrators are set
 	/// @dev Only allow function call if administrators are defined
 	modifier definedAdmins() {
-		require(gridAdmin.adminsAreDefined(), "Grid: administrators must be defined");
+		require(gridAdmin.adminsAreDefined(), "Grid: admin must be defined");
 		_;
 	}
 
 	/// @notice Only token administrators
 	/// @dev Only token admins can proceed to the next step
 	modifier onlyAdmin() {
-		require(gridAdmin.isAdminCaller(msg.sender), "Grid: must be token administrator");
+		require(gridAdmin.isAdminCaller(msg.sender), "Grid: must be token admin");
 		_;
 	}
 

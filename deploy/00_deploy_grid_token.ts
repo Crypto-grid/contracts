@@ -1,35 +1,61 @@
-import { getUnnamedAccounts, ethers, upgrades } from 'hardhat';
+import { getUnnamedAccounts, ethers, upgrades, deployments, network } from 'hardhat';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { isBoxedPrimitive } from 'util/types';
+import fs from 'fs'; // to save the contract address locally
+
+// const exportContract = async (fileName: string, address: string) => {
+//   try {
+//     fs.writeFileSync(
+//       fileName, 
+//       `export const gridProxyContractAddress=${address}`
+//     );
+//   } catch (err) {
+//     console.log(err);
+//   }  
+// }
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 	const { getNamedAccounts, deployments } = hre;
-	const { deploy } = deployments;
+  const chainId: number | undefined = network.config.chainId
+	const { deploy, log } = deployments;
 	const { deployer } = await getNamedAccounts();
 	const randomAccounts = await getUnnamedAccounts();
-	await deploy('Grid', {
-		// Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
+	
+  // deploy grid contract  
+  const deployed = await deploy('Grid', {
 		from: deployer,
-		// args: [20000000, randomAccounts[0], randomAccounts[1], randomAccounts[2]],
 		log: true,
 	});
 
-	const grid = await ethers.getContractFactory('Grid');
-	const gridProxy = await upgrades.deployProxy(grid, {
-		initializer: 'initialize',
-	});
+  // call initialize with...
+  // args: [randomAccounts[0], randomAccounts[1]]
 
-	await gridProxy.deployed();
-	console.log('gridProxy deployed to: ', gridProxy.address);
+  // const deployed = await deploy('Grid', {
+	// 	from: deployer,
+	// 	args: [randomAccounts[0], randomAccounts[1]],
+	// 	log: true,
+	// });
 
-	/*
-    // Getting a previously deployed contract
-    const YourContract = await ethers.getContract("YourContract", deployer);
-    await YourContract.setPurpose("Hello");
+  // const Grid = await ethers.getContractFactory('Grid');
+	// const gridInstance = await upgrades.deployProxy(
+  //   Grid, [ 
+  //     randomAccounts[0], 
+  //     randomAccounts[1] 
+  //   ]
+  // );
+	// await gridInstance.deployed();
+	// log(`GRID deployed to: ${JSON.stringify(deployed,null,2)}`);
+	log(`GRID deployed to: ${deployed.address}`)
 
-    //const yourContract = await ethers.getContractAt('YourContract', "0xaAC799eC2d00C013f1F11c37E654e59B0429DF6A") //<-- if you want to instantiate a version of a contract at a specific address!
-  */
+  // save contract address
+  // await exportContract('gridAddress.ts', gridInstance.address);
+  // fs.writeFile("gridAddress.ts", "Hey there!", function(err) {
+  //   if(err) {
+  //       return console.log(err);
+  //   }
+  //   // console.log("The file was saved!");
+  // }); 
+
 };
 export default func;
 func.tags = ['Grid'];
