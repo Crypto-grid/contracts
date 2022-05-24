@@ -39,8 +39,6 @@ contract Account {
    }
 
 	function signUp(address _address) public {
-		// what is the initial pc speed and claim time for the miner?
-		// ^ will be added
 		accounts[_address] = Acccount(0, 0);
 	}
 

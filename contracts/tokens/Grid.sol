@@ -35,10 +35,10 @@ contract Grid is Initializable, ERC20CappedUpgradeable {
 		__ERC20_init("CryptoGrid", "GRID");
 		__ERC20Capped_init_unchained(MAXIMUM_SUPPLY);
 
-    // initial minting
-		_mint(msg.sender, INITIAL_SUPPLY);
+    // initial minting for developer multi-sig wallet
+	_mint(msg.sender, INITIAL_SUPPLY);
 
-    // define initial admins
+    // define initial admins for other multi-sig wallets
     address[3] memory initAdmin;
     initAdmin[0] = msg.sender;
     initAdmin[1] = _admin2;
