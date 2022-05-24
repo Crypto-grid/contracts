@@ -88,36 +88,12 @@ contract Hardware is ERC721, Ownable {
 		return "ipfs://";
 	}
 
-	// function tokenURI(uint256 tokenId) public view override returns (string memory) {
-	// 	Rarity _rarity = tokenIDRarityMapping[tokenId];
-	// 	if (_rarity == Rarity.Common) {
-	// 		return
-	// 			string(
-	// 				abi.encodePacked(
-	// 					_baseURI(),
-	// 					Base64.encode(
-	// 						bytes(
-	// 							abi.encodePacked(
-	// 								'{"name":',
-	// 								name(), // You can add whatever name here
-	// 								'", "description": "A CPU based hardware for the game cryptogrid",',
-	// 								'"attributes": ["rarity": ',
-	// 								_rarity,
-	// 								']"image":"',
-	// 								rarityToImageMapping[_rarity],
-	// 								"}"
-	// 							)
-	// 						)
-	// 					)
-	// 				)
-	// 			);
-	// 	}
-	// }
+	function tokenURI(uint256 tokenId) public view override returns (string memory) {
+		return rarityToImageMapping[getRarity(tokenId)];
+	}
 
-	function svgToImageURI(string memory svg) public pure returns (string memory) {
-		string memory baseURL = "data:image/svg+xml;base64,";
-		string memory svgBase64Encoded = Base64.encode(bytes(string(abi.encodePacked(svg))));
-		return string(abi.encodePacked(baseURL, svgBase64Encoded));
+	function getRarity(uint256 tokenId) public view returns (Rarity) {
+		return tokenIDRarityMapping[tokenId];
 	}
 
 	function burn(uint256 tokenId) public virtual {
