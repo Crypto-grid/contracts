@@ -32,10 +32,11 @@ contract HardwareFactory is Ownable {
 		string memory _series,
 		string memory _name,
 		uint256 _basePrice,
+		uint256 _baseReward,
 		string[5] memory _imageURI,
 		HardwareType type_
 	) public onlyOwner {
-		Hardware hw = new Hardware(_brand, _series, _name, _basePrice, upgradeTokenAddress_, aggregatorAddress_, _imageURI);
+		Hardware hw = new Hardware(_brand, _series, _name, _basePrice, _baseReward, upgradeTokenAddress_, aggregatorAddress_, _imageURI);
 		// It'll be so nice if there was generics or switch lol
 		if (type_ == HardwareType.CPU) {
 			availableCPUs[address(hw)] = hw;

@@ -3,34 +3,23 @@
 pragma solidity ^0.8.9;
 
 import "../tokens/Upgrades.sol";
+import "../hardware/Hardware.sol";
 
 contract Account {
 	struct Acccount {
 		uint256 rebirths;
 		uint256 sacrifices;
-		// uint256 pcSpeed;
-		// uint256 claimTime;
 	}
 
 	mapping(address => Acccount) public accounts;
 	address public upgradeToken;
+	address public defaultHardware;
 	// string constant PC_SPEED_INCREMENT = 1;
-	uint256 constant CLAIM_TIME_DECREMENT = 5;
-	uint256 constant FIRST_REBIRTH = 12;
-	uint256 constant MAXIMUM_REBIRTH = 8638;
-	uint256 constant A = 10;
-	uint256 constant H = 10;
-	uint256 constant K = 10;
-
-	constructor (address _upgradeToken){
+	// NOTE: _defaultHardware has to be owner before it's able to signup correctly
+	constructor (address _upgradeToken, address _defaultHardware){
 		upgradeToken = _upgradeToken;
+		defaultHardware = _defaultHardware;
 	}
-
-
-	modifier rebirthLimit(address _address) {
-		require(accounts[_address].rebirths <= MAXIMUM_REBIRTH, "Exceed maximum rebirth");
-		_;
-   }
 
    modifier enoughUpgradeToken(address _address){
 	   IERC20 token = IERC20(upgradeToken);
@@ -40,6 +29,8 @@ contract Account {
 
 	function signUp(address _address) public {
 		accounts[_address] = Acccount(0, 0);
+		Hardware hw = Hardware(defaultHardware);
+		hw.mint(_address);
 	}
 
 	function determineUpgradeTokenRequired(address _address) private view returns (uint256 upgradeTokenRequired){
@@ -49,13 +40,13 @@ contract Account {
 		// y = no of upgrades token required
 		// x = no of rebirth
 
-		upgradeTokenRequired = A * ((accounts[_address].rebirths - H)*(accounts[_address].rebirths - H)) + K;
+		// upgradeTokenRequired = A * ((accounts[_address].rebirths - H)*(accounts[_address].rebirths - H)) + K;
 	}
 
 	// rebirth should be called when the player rebirths, this will require an amount of upgrade tokens x, however ALL the upgrade token will be REMOVED!!!
 	// x can be an amount for example 5000 on the first rebirth, second could be 7500, third could be 12000 etc.
 	// whats the logic to determine the number of upgrade tokens? 
-	function rebirth(address _address) public rebirthLimit(_address) enoughUpgradeToken(_address){
+	function rebirth(address _address) public {
 		accounts[_address].rebirths++;
 
 		// Increase PC speed, rate of earning from their equipment. 1.01x faster each rebirth.
@@ -68,5 +59,9 @@ contract Account {
 	function sacrifice(address _address) public {
 		accounts[_address].sacrifices++;
 		accounts[_address].rebirths = 0;
+	}
+
+	function getAccount(address _address) public view returns(Acccount memory){
+		return accounts[_address];
 	}
 }

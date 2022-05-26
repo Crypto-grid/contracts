@@ -16,6 +16,7 @@ contract Hardware is ERC721, Ownable {
 	using Counters for Counters.Counter;
 	Counters.Counter public idCount;
 	uint256 public basePrice;
+	uint256 public baseReward;
 	address public upgradeToken;
 	uint256 mintStatus;
 
@@ -38,6 +39,7 @@ contract Hardware is ERC721, Ownable {
 		string memory _series,
 		string memory _CPUname,
 		uint256 _basePrice,
+		uint256 _baseReward,
 		address _upgradeToken,
 		address _priceFeed,
 		string[5] memory _rarityToImageMapping
@@ -48,6 +50,7 @@ contract Hardware is ERC721, Ownable {
 		require(address(_priceFeed) != address(0) && address(_upgradeToken) != address(0), "Addresses cannot be 0");
 		priceFeed = AggregatorV3Interface(_priceFeed);
 		basePrice = _basePrice;
+		baseReward = _baseReward;
 		upgradeToken = _upgradeToken;
 
 		for (uint256 i = 0; i < 5; i++) {
@@ -60,11 +63,20 @@ contract Hardware is ERC721, Ownable {
 	}
 
 	// changeBasePrice should only be executed once a governance vote has passed
+	function changeBaseReward(uint256 _baseReward) public onlyOwner {
+		baseReward = _baseReward;
+	}
+
+	function getBaseReward() public view returns (uint256) {
+		return baseReward;
+	}
+
+	// changeBasePrice should only be executed once a governance vote has passed
 	function changeBasePrice(uint256 _basePrice) public onlyOwner {
 		basePrice = _basePrice;
 	}
 
-	function mint() public {
+	function mint(address _address) public {
 		IBERC20 _upgrade = IBERC20(upgradeToken);
 		uint256 price = getMintPrice();
 		idCount.increment();
@@ -73,7 +85,7 @@ contract Hardware is ERC721, Ownable {
 		tokenIDRarityMapping[idCount.current()] = Rarity.Common;
 
 		// TODO: Implement logic for randomness with chainlink VRF v2 or something
-		_safeMint(msg.sender, idCount.current());
+		_safeMint(_address, idCount.current());
 	}
 
 	function getMintPrice() public view returns (uint256) {
